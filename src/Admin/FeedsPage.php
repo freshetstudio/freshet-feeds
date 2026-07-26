@@ -12,6 +12,7 @@ use FreshetFeeds\Feed\Feed;
 use FreshetFeeds\Feed\FeedRepository;
 use FreshetFeeds\Fetch\FeedRunner;
 use FreshetFeeds\License\LicenseInterface;
+use FreshetFeeds\Provider\MockProvider;
 use FreshetFeeds\Provider\ProviderRegistry;
 use Throwable;
 
@@ -92,11 +93,23 @@ final class FeedsPage
         $this->authorize('freshet_feeds_save_feed');
 
         $id = (int) ($_POST['feed_id'] ?? 0); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput, WordPress.Security.NonceVerification.Missing -- int cast sanitizes; nonce verified in authorize().
-        $providerId = sanitize_key(wp_unslash($_POST['provider'] ?? 'mock'));
+        // No fallback provider: a typo or a deregistered provider must not
+        // quietly become some other provider's data.
+        $providerId = sanitize_key(wp_unslash($_POST['provider'] ?? ''));
         $provider = $this->providers->get($providerId);
 
+        if ($provider === null) {
+            $this->back('error', $providerId === ''
+                ? __('Pick a provider for this feed.', 'freshet-feeds')
+                : sprintf(
+                    /* translators: %s: provider id submitted with the form */
+                    __('Unknown provider “%s”.', 'freshet-feeds'),
+                    $providerId
+                ));
+        }
+
         $settings = [];
-        foreach (array_keys($provider?->settingsFields() ?? []) as $key) {
+        foreach (array_keys($provider->settingsFields()) as $key) {
             $settings[$key] = sanitize_text_field(wp_unslash($_POST['settings'][$key] ?? ''));
         }
 
@@ -351,7 +364,14 @@ final class FeedsPage
             echo '<tr>';
             echo '<td><strong>' . esc_html($feed->name) . '</strong></td>';
             echo '<td><code>' . esc_html($feed->slug) . '</code></td>';
-            echo '<td>' . esc_html($this->providers->get($feed->providerId)?->label() ?? $feed->providerId) . '</td>';
+            $provider = $this->providers->get($feed->providerId);
+            echo '<td>' . ($provider !== null
+                ? esc_html($provider->label())
+                : '<span style="color:#b32d2e;">' . esc_html(sprintf(
+                    /* translators: %s: provider id stored on the feed, or a dash when empty */
+                    __('Unknown provider (%s)', 'freshet-feeds'),
+                    $feed->providerId !== '' ? $feed->providerId : '—'
+                )) . '</span>') . '</td>';
             echo '<td>' . esc_html($fetchedAt > 0
                 ? sprintf(/* translators: %s: human time diff */ __('%s ago', 'freshet-feeds'), human_time_diff($fetchedAt))
                 : __('never', 'freshet-feeds')) . '</td>';
@@ -410,7 +430,7 @@ final class FeedsPage
 
         $providerSelect = '<select name="provider" id="freshet-feeds-provider">';
         foreach ($this->providers->all() as $provider) {
-            if ($provider->id() === 'mock' && wp_get_environment_type() === 'production') {
+            if ($provider->id() === MockProvider::ID && !MockProvider::isAvailable()) {
                 continue;
             }
 

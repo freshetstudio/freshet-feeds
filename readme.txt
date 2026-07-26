@@ -35,6 +35,7 @@ Every provider — LinkedIn company pages, RSS/Atom, YouTube channels, Bluesky p
 * **RSS / Atom** — any feed URL; also covers Mastodon, subreddits, podcasts.
 * **YouTube (channel)** — keyless public channel feed, no API key required.
 * **Bluesky (profile)** — public API, no authentication.
+* **Mock (fixture data)** — bundled sample posts, no credentials and no network calls, for building and styling templates before a live connection exists. Hidden and blocked in `production`.
 
 The plugin is fully functional with unlimited feeds. A separately distributed version with a managed LinkedIn connection service and direct support is available from [freshet.studio](https://freshet.studio). Full developer documentation: [freshet.studio/docs](https://freshet.studio/docs).
 
@@ -59,11 +60,21 @@ The complete, unminified source — including the block editor JavaScript in `bl
 2. Go to **Feeds → Add feed**, pick a provider, and configure it (a feed URL, channel ID, handle — or a LinkedIn connection).
 3. Add the **Feed** block to a page, or call `freshet_feeds_render( 'your-feed-slug' )` in your theme.
 
+No credentials yet? Pick the **Mock (fixture data)** provider in step 2 and start building templates immediately — see the FAQ below.
+
 == Frequently Asked Questions ==
 
 = Can it show any LinkedIn page? =
 
 No — and no plugin honestly can. LinkedIn's official API only allows a page **admin** to read their own page's posts. Services that show arbitrary pages scrape, which breaks routinely and violates LinkedIn's terms. Freshet Feeds uses the official API only.
+
+= Can I build templates before my LinkedIn app is approved? =
+
+Yes — that is what the **Mock (fixture data)** provider is for. Create a feed with it and you get a bundled set of realistic LinkedIn-shaped posts (single image, multi-image, shared article, text-only, an image-only post with no text, and a long multi-paragraph one) without any credentials, developer app, or network call. It is also the fastest way to evaluate the plugin before committing to the LinkedIn app process.
+
+Mock posts run through exactly the same normalizer, item model and template chain as live LinkedIn posts, so everything you build against them works unchanged on real data — you switch the feed's provider and nothing else.
+
+The provider is hidden in the provider dropdown on sites reporting a `production` environment type, and refuses to fetch there even for a feed created earlier, so fixture posts cannot end up on a live site.
 
 = Why is there no X (Twitter) provider? =
 

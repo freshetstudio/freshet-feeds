@@ -125,7 +125,11 @@ final class FeedRepository
             id: $post->ID,
             name: $post->post_title,
             slug: $post->post_name,
-            providerId: (string) ($config['provider'] ?? 'mock'),
+            // No fallback provider on purpose: defaulting a missing/corrupt
+            // config to a real provider would silently serve someone else's
+            // shape of data. An empty id resolves to nothing and fails loudly
+            // in FeedRunner and the admin list.
+            providerId: (string) ($config['provider'] ?? ''),
             settings: is_array($config['settings'] ?? null) ? $config['settings'] : [],
             count: (int) ($config['count'] ?? Feed::DEFAULT_COUNT),
             ttl: (int) ($config['ttl'] ?? Feed::DEFAULT_TTL),

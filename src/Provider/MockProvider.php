@@ -16,6 +16,8 @@ use FreshetFeeds\Provider\LinkedIn\PostNormalizer;
  */
 final class MockProvider implements ProviderInterface
 {
+    public const ID = 'mock';
+
     public function __construct(
         private readonly PostNormalizer $normalizer,
         private readonly string $fixturePath,
@@ -24,7 +26,7 @@ final class MockProvider implements ProviderInterface
 
     public function id(): string
     {
-        return 'mock';
+        return self::ID;
     }
 
     public function label(): string
@@ -32,8 +34,26 @@ final class MockProvider implements ProviderInterface
         return __('Mock (fixture data)', 'freshet-feeds');
     }
 
+    /**
+     * Fixture posts must never surface as a site's real content. The admin
+     * dropdown hides this provider in `production`, but a feed created before
+     * the environment flipped would keep fetching — so the environment is the
+     * gate, not the UI.
+     */
+    public static function isAvailable(): bool
+    {
+        return wp_get_environment_type() !== 'production';
+    }
+
     public function fetch(Feed $feed): ItemCollection
     {
+        if (!self::isAvailable()) {
+            throw new FetchException(esc_html__(
+                'The mock provider is disabled in production environments. Pick a real provider for this feed.',
+                'freshet-feeds'
+            ));
+        }
+
         if (!is_readable($this->fixturePath)) {
             throw new FetchException(esc_html(sprintf('Fixture not readable: %s', $this->fixturePath)));
         }

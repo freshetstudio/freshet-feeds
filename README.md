@@ -44,9 +44,39 @@ Manage feeds under **Feeds** in wp-admin. v1 providers:
 - **RSS / Atom** — any feed URL; also covers Mastodon, subreddits and podcasts.
 - **YouTube** — channel or playlist uploads via the Atom feed; no API key.
 - **Bluesky** — public author feed; no credentials.
-- **Mock (fixture data)** — realistic LinkedIn-shaped data with zero credentials, for building and styling templates before a live connection exists. Hidden in `production` environments.
+- **Mock (fixture data)** — realistic LinkedIn-shaped data with zero credentials, for building and styling templates before a live connection exists. See below.
 
 Third-party providers plug in via the `freshet_feeds_register_providers` action.
+
+### Mock provider — build before you have credentials
+
+A LinkedIn developer app takes days to get through review, and evaluating the
+plugin shouldn't require one at all. Create a feed with **Mock (fixture data)**
+and you have items to build against in seconds:
+
+1. **Feeds → Add feed**, set a name and slug, pick *Mock (fixture data)*.
+2. Save. The feed fills immediately from `data/fixtures/linkedin-posts.json` — no
+   credentials, no network call.
+3. Build your `item.php` override, then render with `freshet_feeds_render( 'your-slug' )`.
+
+**Anything built against it works unchanged on live data.** The fixture is a real
+`GET /rest/posts` payload shape (LinkedIn-Version 202506) and runs through the same
+`PostNormalizer` the live client uses — same `Item` objects, same template chain.
+Going live means changing the feed's provider to *LinkedIn (company page)* and
+picking a connection; templates don't change.
+
+The fixture deliberately covers the cases that break markup: single image,
+multi-image, shared article (the only kind with a `title`), text-only, an
+image-only post with **empty commentary**, a **long multi-paragraph** one, and a
+post whose image URN doesn't resolve. It holds more posts than the default feed
+count, so a feed set above 5 items is genuinely exercised. Copy the file, edit it,
+and point `MockProvider` at your own copy if you want to test a specific shape.
+
+**It cannot run in production.** On a site reporting `wp_get_environment_type()`
+=== `'production'` the provider is hidden in the dropdown *and*
+`MockProvider::fetch()` throws — so a feed created while the site was still
+`staging` stops serving fixture posts the moment the environment flips, rather
+than quietly presenting them as the site owner's content.
 
 Feeds are unlimited in every build. A separately distributed build adds a
 managed LinkedIn connection — you use our approved app instead of registering

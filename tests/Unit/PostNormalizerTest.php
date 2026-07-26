@@ -89,6 +89,50 @@ final class PostNormalizerTest extends TestCase
         $this->assertNull($item->image);
     }
 
+    public function testEmptyCommentaryPostKeepsItsImageAndHasNoTitle(): void
+    {
+        $post = $this->fixture['elements'][5];
+        $item = $this->normalizer->normalize($post, $this->fixture['_images']);
+
+        $this->assertSame('', $item->content, 'Image-only post: nothing to fall back on but the title');
+        $this->assertNull($item->title);
+        $this->assertSame('Fallback', $item->title('Fallback'));
+        $this->assertTrue($item->hasImage());
+    }
+
+    public function testLongCommentaryKeepsParagraphBreaks(): void
+    {
+        $post = $this->fixture['elements'][6];
+        $item = $this->normalizer->normalize($post, $this->fixture['_images']);
+
+        $this->assertGreaterThan(400, mb_strlen($item->content), 'Long enough to exercise excerpt() truncation');
+        $this->assertStringContainsString("\n\n", $item->content, 'Paragraph breaks survive normalization');
+        $this->assertStringNotContainsString('{hashtag', $item->content);
+        $this->assertStringEndsWith('#Traceability', $item->content);
+    }
+
+    public function testMultiImagePostWithThreeImagesUsesTheFirst(): void
+    {
+        $post = $this->fixture['elements'][8];
+        $item = $this->normalizer->normalize($post, $this->fixture['_images']);
+
+        $this->assertNotNull($item->image);
+        $this->assertSame('https://picsum.photos/seed/freshet-feeds-8/1200/675', $item->image->remoteUrl);
+        $this->assertSame('Numbered sample cups laid out on a cupping table', $item->image->alt);
+    }
+
+    public function testPostReferencingAnUnresolvedUrnRendersWithoutImage(): void
+    {
+        // Element 9's URN is deliberately absent from _images (see the fixture's
+        // _comment) — a failed batch resolve must not lose the post.
+        $post = $this->fixture['elements'][9];
+        $item = $this->normalizer->normalize($post, $this->fixture['_images']);
+
+        $this->assertNull($item->image);
+        $this->assertFalse($item->hasImage());
+        $this->assertStringContainsString('(Finca La Cascada)', $item->content);
+    }
+
     public function testOrganizationBecomesAuthor(): void
     {
         $org = new ItemAuthor('Acme', 'https://www.linkedin.com/company/acme');

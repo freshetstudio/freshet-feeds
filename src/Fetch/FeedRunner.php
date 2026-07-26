@@ -43,7 +43,9 @@ final class FeedRunner
             $provider = $this->providers->get($feed->providerId);
 
             if ($provider === null) {
-                $this->cache->recordError($feed, sprintf('Unknown provider "%s".', $feed->providerId));
+                $this->cache->recordError($feed, $feed->providerId === ''
+                    ? 'This feed has no provider configured.'
+                    : sprintf('Unknown provider "%s".', $feed->providerId));
 
                 return null;
             }
