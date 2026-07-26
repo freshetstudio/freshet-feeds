@@ -8,6 +8,7 @@
 #
 # Ships: PHP sources, compiled block (build/), templates, fixtures, autoloader.
 # Excludes: dev tooling, tests, block JS sources, repo docs.
+# Also tags HEAD v{version} locally when the tree is clean; pushing is manual.
 
 set -e
 
@@ -29,6 +30,35 @@ assert_shippable() {
     echo "$stray" | sed 's/^/  /' >&2
     exit 1
   fi
+}
+
+# A shipped ZIP has to be reproducible from a commit, so every release build
+# leaves a tag behind. Local only — pushing stays a deliberate, separate step.
+tag_release() {
+  local tag="v${VERSION}" existing
+
+  if ! git rev-parse --git-dir >/dev/null 2>&1; then
+    echo "Not a git checkout — skipping tag $tag." >&2
+    return
+  fi
+
+  existing=$(git rev-parse -q --verify "refs/tags/$tag^{commit}" || true)
+  if [ -n "$existing" ]; then
+    if [ "$existing" = "$(git rev-parse HEAD)" ]; then
+      echo "Tag $tag already on HEAD."
+      return
+    fi
+    echo "Release built, but $tag already points at another commit — bump the version." >&2
+    exit 1
+  fi
+
+  if [ -n "$(git status --porcelain)" ]; then
+    echo "Uncommitted changes — not tagging. Commit, then: git tag -a $tag -m \"freshet-feeds ${VERSION}\"" >&2
+    return
+  fi
+
+  git tag -a "$tag" -m "freshet-feeds ${VERSION}"
+  echo "Tagged $tag — push it with: git push origin $tag"
 }
 
 VERSION=$(grep -m1 "FRESHET_FEEDS_VERSION" freshet-feeds.php | sed "s/.*'\([0-9.]*\)'.*/\1/")
@@ -95,3 +125,5 @@ composer install --quiet
 
 echo "Built $ZIP ($(du -h "$ZIP" | cut -f1))"
 echo "Built $WPORG_ZIP ($(du -h "$WPORG_ZIP" | cut -f1))"
+
+tag_release
