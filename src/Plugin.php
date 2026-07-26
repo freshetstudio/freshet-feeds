@@ -86,6 +86,19 @@ final class Plugin
         $this->templates = new TemplateLoader(FRESHET_FEEDS_DIR . 'templates');
 
         add_action('init', [$this, 'onInit']);
+
+        // Translations shipped inside the plugin's own /languages need this
+        // call — without a custom path the textdomain registry only looks in
+        // WP_LANG_DIR, so wp.org-delivered translations load either way but a
+        // bundled .mo never would. On init: nothing here translates earlier.
+        add_action('init', static function (): void {
+            load_plugin_textdomain(
+                'freshet-feeds',
+                false,
+                dirname(plugin_basename(FRESHET_FEEDS_FILE)) . '/languages'
+            );
+        });
+
         add_action('rest_api_init', fn () => (new FeedsController($this->feeds))->registerRoutes());
 
         $licenseSection = $licenseClient !== null ? new LicenseSection($licenseClient, $this->license) : null;
