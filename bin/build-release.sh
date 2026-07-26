@@ -13,6 +13,24 @@ set -e
 
 cd "$(dirname "$0")/.."
 
+# Build output counts as published — the exclude list below and .gitignore are
+# separate lists, and only this one decides what a customer receives. So assert
+# it rather than trust it. Filename rules come from .freshet/content-guard.sh,
+# the same source the pre-commit hook and CI use.
+assert_shippable() {
+  local zip="$1" stray
+  if ! unzip -Z1 "$zip" | bash .freshet/content-guard.sh --paths; then
+    echo "Release blocked: internal file inside $zip" >&2
+    exit 1
+  fi
+  stray=$(unzip -Z1 "$zip" | grep -iE '\.md$' || true)
+  if [ -n "$stray" ]; then
+    echo "Release blocked: repo docs inside $zip — readme.txt is the only doc that ships:" >&2
+    echo "$stray" | sed 's/^/  /' >&2
+    exit 1
+  fi
+}
+
 VERSION=$(grep -m1 "FRESHET_FEEDS_VERSION" freshet-feeds.php | sed "s/.*'\([0-9.]*\)'.*/\1/")
 STAGE="dist/freshet-feeds"
 ZIP="dist/freshet-feeds-${VERSION}.zip"
@@ -29,6 +47,7 @@ rsync -a \
   --exclude='.git*' \
   --exclude='.wordpress-org' \
   --exclude='.wporg-svn' \
+  --exclude='.freshet' \
   --exclude='node_modules' \
   --exclude='dist' \
   --exclude='tests' \
@@ -52,6 +71,7 @@ rsync -a \
   ./ "$STAGE/"
 
 (cd dist && zip -qr "$(basename "$ZIP")" freshet-feeds)
+assert_shippable "$ZIP"
 
 # wp.org variant (directory guidelines): strip the ENTIRE remote-license stack
 # — no license checks, no update injection, no upsell surfaces ship to the
@@ -66,6 +86,7 @@ rm "$STAGE/src/License/UpdateChecker.php" \
 (cd "$STAGE" && composer dump-autoload --no-dev --optimize --quiet)
 WPORG_ZIP="dist/freshet-feeds-${VERSION}-wporg.zip"
 (cd dist && zip -qr "$(basename "$WPORG_ZIP")" freshet-feeds)
+assert_shippable "$WPORG_ZIP"
 
 rm -rf "$STAGE"
 
