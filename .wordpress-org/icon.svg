@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Freshet Feeds">
+  <rect width="256" height="256" rx="52" fill="#0A1499"/>
+  <g transform="translate(56,56) scale(6.0)" fill="none" stroke="#ffffff" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9"/>
+    <path d="M4 4a16 16 0 0 1 16 16"/>
+    <circle cx="5" cy="19" r="1.5" fill="#ffffff" stroke="none"/>
+  </g>
+</svg>

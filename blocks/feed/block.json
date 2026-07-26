@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "freshet-feeds/feed",
+    "title": "Feed",
+    "category": "widgets",
+    "icon": "rss",
+    "description": "Display an external feed (LinkedIn, ...) using Freshet Feeds templates.",
+    "keywords": ["feed", "linkedin", "social"],
+    "textdomain": "freshet-feeds",
+    "attributes": {
+        "feedId": {
+            "type": "integer",
+            "default": 0
+        },
+        "layout": {
+            "type": "string",
+            "default": ""
+        },
+        "count": {
+            "type": "integer",
+            "default": 0
+        }
+    },
+    "supports": {
+        "align": ["wide", "full"],
+        "spacing": {
+            "margin": true
+        },
+        "html": false
+    },
+    "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
+    "render": "file:./render.php"
+}

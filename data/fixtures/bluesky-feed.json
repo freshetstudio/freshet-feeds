@@ -1,0 +1,96 @@
+{
+    "feed": [
+        {
+            "post": {
+                "uri": "at://did:plc:acme123/app.bsky.feed.post/3kfixture001",
+                "cid": "bafyfixture001",
+                "author": {
+                    "did": "did:plc:acme123",
+                    "handle": "acme.example.com",
+                    "displayName": "Copperline Coffee Roasters",
+                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:acme123/avatar@jpeg"
+                },
+                "record": {
+                    "$type": "app.bsky.feed.post",
+                    "createdAt": "2026-07-01T10:00:00.000Z",
+                    "text": "We're thrilled to announce our new single-origin espresso line — small-batch roasted for cafés across Europe. ☕"
+                },
+                "embed": {
+                    "$type": "app.bsky.embed.images#view",
+                    "images": [
+                        {
+                            "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:acme123/bafyimg001@jpeg",
+                            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:acme123/bafyimg001@jpeg",
+                            "alt": "Bags of coffee on a roastery workbench at dawn",
+                            "aspectRatio": { "width": 1200, "height": 675 }
+                        }
+                    ]
+                },
+                "replyCount": 3,
+                "repostCount": 12,
+                "likeCount": 87,
+                "indexedAt": "2026-07-01T10:00:05.000Z"
+            }
+        },
+        {
+            "reason": {
+                "$type": "app.bsky.feed.defs#reasonRepost",
+                "by": { "did": "did:plc:acme123", "handle": "acme.example.com" },
+                "indexedAt": "2026-06-28T08:00:00.000Z"
+            },
+            "post": {
+                "uri": "at://did:plc:other999/app.bsky.feed.post/3krepost001",
+                "author": { "did": "did:plc:other999", "handle": "other.bsky.social", "displayName": "Someone Else" },
+                "record": {
+                    "$type": "app.bsky.feed.post",
+                    "createdAt": "2026-06-27T12:00:00.000Z",
+                    "text": "A repost that must be filtered out."
+                }
+            }
+        },
+        {
+            "post": {
+                "uri": "at://did:plc:acme123/app.bsky.feed.post/3kfixture002",
+                "cid": "bafyfixture002",
+                "author": {
+                    "did": "did:plc:acme123",
+                    "handle": "acme.example.com",
+                    "displayName": "Copperline Coffee Roasters"
+                },
+                "record": {
+                    "$type": "app.bsky.feed.post",
+                    "createdAt": "2026-06-24T11:00:00.000Z",
+                    "text": "Our founder on sourcing, café culture, and what's next for carbon-neutral roasting — full interview linked."
+                },
+                "embed": {
+                    "$type": "app.bsky.embed.external#view",
+                    "external": {
+                        "uri": "https://example.com/interviews/carbon-neutral-roasting",
+                        "title": "The Road to Carbon-Neutral Roasting",
+                        "description": "An interview about sustainable roasting.",
+                        "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:acme123/bafylink002@jpeg"
+                    }
+                },
+                "indexedAt": "2026-06-24T11:00:04.000Z"
+            }
+        },
+        {
+            "post": {
+                "uri": "at://did:plc:acme123/app.bsky.feed.post/3kfixture003",
+                "cid": "bafyfixture003",
+                "author": {
+                    "did": "did:plc:acme123",
+                    "handle": "acme.example.com",
+                    "displayName": "Copperline Coffee Roasters"
+                },
+                "record": {
+                    "$type": "app.bsky.feed.post",
+                    "createdAt": "2026-06-10T09:00:00.000Z",
+                    "text": "Registration for our annual Barista Summit is open. Two days of workshops and the 2027 lineup."
+                },
+                "indexedAt": "2026-06-10T09:00:03.000Z"
+            }
+        }
+    ],
+    "cursor": "2026-06-10T09:00:00.000Z"
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015"
+      xmlns:media="http://search.yahoo.com/mrss/"
+      xmlns="http://www.w3.org/2005/Atom">
+    <link rel="self" href="https://www.youtube.com/feeds/videos.xml?channel_id=UCacme000000000000000000"/>
+    <id>yt:channel:UCacme000000000000000000</id>
+    <yt:channelId>UCacme000000000000000000</yt:channelId>
+    <title>Copperline Coffee Roasters</title>
+    <link rel="alternate" href="https://www.youtube.com/channel/UCacme000000000000000000"/>
+    <published>2019-03-01T10:00:00+00:00</published>
+    <entry>
+        <id>yt:video:dQw4w9WgXcA</id>
+        <yt:videoId>dQw4w9WgXcA</yt:videoId>
+        <yt:channelId>UCacme000000000000000000</yt:channelId>
+        <title>R-200 walkaround: drum roasting in 4 minutes</title>
+        <link rel="alternate" href="https://www.youtube.com/watch?v=dQw4w9WgXcA"/>
+        <author>
+            <name>Copperline Coffee Roasters</name>
+            <uri>https://www.youtube.com/channel/UCacme000000000000000000</uri>
+        </author>
+        <published>2026-06-20T14:00:00+00:00</published>
+        <updated>2026-06-21T09:00:00+00:00</updated>
+        <media:group>
+            <media:title>R-200 walkaround: drum roasting in 4 minutes</media:title>
+            <media:content url="https://www.youtube.com/v/dQw4w9WgXcA?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+            <media:thumbnail url="https://i.ytimg.com/vi/dQw4w9WgXcA/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Join our head roaster for a walkaround of the award-winning R-200 drum roaster.</media:description>
+        </media:group>
+    </entry>
+    <entry>
+        <id>yt:video:oHg5SJYRHA0</id>
+        <yt:videoId>oHg5SJYRHA0</yt:videoId>
+        <yt:channelId>UCacme000000000000000000</yt:channelId>
+        <title>Barista Summit 2026 aftermovie</title>
+        <link rel="alternate" href="https://www.youtube.com/watch?v=oHg5SJYRHA0"/>
+        <author>
+            <name>Copperline Coffee Roasters</name>
+        </author>
+        <published>2026-06-01T10:00:00+00:00</published>
+        <updated>2026-06-01T10:00:00+00:00</updated>
+        <media:group>
+            <media:title>Barista Summit 2026 aftermovie</media:title>
+            <media:thumbnail url="https://i.ytimg.com/vi/oHg5SJYRHA0/hqdefault.jpg" width="480" height="360"/>
+            <media:description>Two days, 300 baristas, one lineup.</media:description>
+        </media:group>
+    </entry>
+</feed>

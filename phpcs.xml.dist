@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ruleset name="FreshetFeeds">
+    <description>Coding standard for Freshet Feeds: PSR-12 style code with WordPress security sniffs.</description>
+
+    <file>src</file>
+    <file>includes</file>
+    <file>templates</file>
+    <file>blocks/feed/render.php</file>
+    <file>freshet-feeds.php</file>
+    <file>uninstall.php</file>
+
+    <arg name="extensions" value="php"/>
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <config name="testVersion" value="8.2-"/>
+
+    <!-- Base style: PSR-12 (the codebase uses PSR-4 classes, short arrays, camelCase). -->
+    <rule ref="PSR12"/>
+
+    <!-- WordPress security discipline on top. -->
+    <rule ref="WordPress.Security.EscapeOutput"/>
+    <rule ref="WordPress.Security.NonceVerification"/>
+    <rule ref="WordPress.Security.ValidatedSanitizedInput"/>
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array" value="freshet-feeds"/>
+        </properties>
+    </rule>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>node_modules/*</exclude-pattern>
+    <exclude-pattern>build/*</exclude-pattern>
+</ruleset>
