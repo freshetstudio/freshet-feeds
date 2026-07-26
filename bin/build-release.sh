@@ -100,6 +100,11 @@ rsync -a \
   --exclude='.DS_Store' \
   ./ "$STAGE/"
 
+# The "prepare" script runs bash .freshet/install-hooks.sh on every npm install,
+# but .freshet is excluded above — so `npm install` in the shipped package would
+# fail. Strip it from the staged copy only; the dev repo keeps its hook install.
+node -e "const fs=require('fs'),f='$STAGE/package.json',p=JSON.parse(fs.readFileSync(f));if(p.scripts){delete p.scripts.prepare}fs.writeFileSync(f,JSON.stringify(p,null,4)+'\n')"
+
 (cd dist && zip -qr "$(basename "$ZIP")" freshet-feeds)
 assert_shippable "$ZIP"
 
