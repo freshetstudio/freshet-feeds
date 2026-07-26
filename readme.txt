@@ -52,7 +52,7 @@ All fetching happens server-side on your cache schedule; site visitors never con
 
 == Source code ==
 
-The complete, unminified source — including the block editor JavaScript in `blocks/` and the build setup — ships with the plugin and is maintained publicly at [github.com/kristoffbertram/freshet-feeds](https://github.com/kristoffbertram/freshet-feeds). The compiled bundle in `build/` is generated from `blocks/` by running `npm install` and `npm run build` (uses @wordpress/scripts).
+The complete, unminified source — including the block editor JavaScript in `blocks/` and the build setup — ships with the plugin and is maintained publicly at [github.com/freshetstudio/freshet-feeds](https://github.com/freshetstudio/freshet-feeds). The compiled bundle in `build/` is generated from `blocks/` by running `npm install` and `npm run build` (uses @wordpress/scripts).
 
 == Installation ==
 
