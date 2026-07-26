@@ -1,0 +1,461 @@
+# Copyright (C) 2026 Freshet Studio
+# This file is distributed under the same license as the Freshet Feeds plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Freshet Feeds 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/freshet-feeds\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-26T17:13:22+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: freshet-pot-extract 1.0 (Python tokenizer fallback)\n"
+"X-Domain: freshet-feeds\n"
+
+#. translators: %s: current PHP version
+#: freshet-feeds.php:34
+msgid "Freshet Feeds requires PHP 8.2 or newer. This site runs PHP %s — the plugin is inactive."
+msgstr ""
+
+#: freshet-feeds.php:47
+msgid "Freshet Feeds is missing its Composer autoloader. Run \"composer install\" in the plugin directory."
+msgstr ""
+
+#: src/Admin/FeedsPage.php:54 src/Admin/FeedsPage.php:299
+msgid "Freshet Feeds"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:55 src/Admin/FeedsPage.php:282 src/Feed/FeedRepository.php:22
+msgid "Feeds"
+msgstr ""
+
+#. translators: %s: connection label
+#: src/Admin/FeedsPage.php:77
+msgid "LinkedIn connection “%s” authorized."
+msgstr ""
+
+#. translators: %s: connection label
+#: src/Admin/FeedsPage.php:80
+msgid "Saved."
+msgstr ""
+
+#. translators: %s: connection label
+#: src/Admin/FeedsPage.php:81
+msgid "Deleted."
+msgstr ""
+
+#: src/Admin/FeedsPage.php:82
+msgid "Feed refreshed."
+msgstr ""
+
+#: src/Admin/FeedsPage.php:83
+msgid "Something went wrong."
+msgstr ""
+
+#: src/Admin/FeedsPage.php:103
+msgid "Pick a provider for this feed."
+msgstr ""
+
+#. translators: %s: provider id submitted with the form
+#: src/Admin/FeedsPage.php:106
+msgid "Unknown provider “%s”."
+msgstr ""
+
+#: src/Admin/FeedsPage.php:153
+msgid "Unknown feed."
+msgstr ""
+
+#: src/Admin/FeedsPage.php:159
+msgid "Fetch failed."
+msgstr ""
+
+#: src/Admin/FeedsPage.php:283
+msgid "Connections"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:287 src/Admin/LicenseSection.php:83
+msgid "License"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:304
+msgid "Pro"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:306
+msgid "Free"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:307
+msgid "Upgrade"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:310
+msgid "Docs"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:311
+msgid "Support"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:335 src/Admin/FeedsPage.php:410
+msgid "Add feed"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:340 src/Admin/FeedsPage.php:419
+msgid "Name"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:340 src/Admin/FeedsPage.php:423
+msgid "Slug"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:340 src/Admin/FeedsPage.php:445
+msgid "Provider"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:340
+msgid "Last fetched"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:340
+msgid "Status"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:347
+msgid "No feeds yet."
+msgstr ""
+
+#. translators: %s: provider id stored on the feed, or a dash when empty
+#: src/Admin/FeedsPage.php:372
+msgid "Unknown provider (%s)"
+msgstr ""
+
+#. translators: %s: human time diff
+#: src/Admin/FeedsPage.php:376
+msgid "%s ago"
+msgstr ""
+
+#. translators: %s: human time diff
+#: src/Admin/FeedsPage.php:377
+msgid "never"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:384
+msgid "Edit"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:386
+msgid "Refresh"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:388
+msgid "Delete this feed?"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:389 src/Admin/FeedsPage.php:546
+msgid "Delete"
+msgstr ""
+
+#. translators: %s: PHP code example
+#: src/Admin/FeedsPage.php:399
+msgid "Render a feed in your theme with %s or the “Feed” block."
+msgstr ""
+
+#: src/Admin/FeedsPage.php:410
+msgid "Edit feed"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:427
+msgid "Used in code: freshet_feeds_render( 'slug' ). Leave empty to derive from the name."
+msgstr ""
+
+#: src/Admin/FeedsPage.php:454
+msgid "— select —"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:461
+msgid " (not connected)"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:478
+msgid "Items"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:482
+msgid "Cache TTL (seconds)"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:488
+msgid "Default layout"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:492
+msgid "Grid"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:494
+msgid "List"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:500
+msgid "Create feed"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:500
+msgid "Save feed"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:501
+msgid "Back to list"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:507
+msgid "LinkedIn connections"
+msgstr ""
+
+#. translators: %s: OAuth redirect URI
+#: src/Admin/FeedsPage.php:511
+msgid "Create a LinkedIn developer app with Community Management API access and register this redirect URL: %s"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:532
+msgid "Connected"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:534
+msgid "Reauthorization needed"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:535
+msgid "Not connected"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:543
+msgid "Connect / reauthorize"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:545
+msgid "Delete this connection?"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:553 src/Admin/FeedsPage.php:562
+msgid "Add connection"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:558
+msgid "Label"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:559
+msgid "Client ID"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:560
+msgid "Client secret"
+msgstr ""
+
+#: src/Admin/FeedsPage.php:578
+msgid "You are not allowed to manage feeds."
+msgstr ""
+
+#: src/Admin/LicenseSection.php:46
+msgid "Enter a license key."
+msgstr ""
+
+#: src/Admin/LicenseSection.php:52
+msgid "Activation failed."
+msgstr ""
+
+#: src/Admin/LicenseSection.php:88
+msgid "Key:"
+msgstr ""
+
+#: src/Admin/LicenseSection.php:92
+msgid "Pro active — managed LinkedIn connection enabled"
+msgstr ""
+
+#: src/Admin/LicenseSection.php:93
+msgid "Invalid or expired — managed LinkedIn connection disabled"
+msgstr ""
+
+#: src/Admin/LicenseSection.php:104
+msgid "Deactivate license on this site"
+msgstr ""
+
+#. translators: %s: linked store URL
+#: src/Admin/LicenseSection.php:115
+msgid "Feeds are free and unlimited. %s adds the managed LinkedIn connection — no LinkedIn developer app required."
+msgstr ""
+
+#: src/Admin/LicenseSection.php:125
+msgid "License key"
+msgstr ""
+
+#: src/Admin/LicenseSection.php:127
+msgid "Activate"
+msgstr ""
+
+#: src/Admin/LicenseSection.php:137
+msgid "Data"
+msgstr ""
+
+#: src/Admin/LicenseSection.php:144
+msgid "Remove all feeds, cached items, and localized images when the plugin is uninstalled."
+msgstr ""
+
+#: src/Admin/LicenseSection.php:146
+msgid "Connection secrets and license data are always removed on uninstall, regardless of this setting."
+msgstr ""
+
+#: src/Admin/LicenseSection.php:147
+msgid "Save"
+msgstr ""
+
+#: src/Admin/LicenseSection.php:154
+msgid "You are not allowed to manage the license."
+msgstr ""
+
+#: src/Admin/OAuthController.php:28 src/Admin/OAuthController.php:50
+msgid "You are not allowed to manage feed connections."
+msgstr ""
+
+#: src/Admin/OAuthController.php:37 src/Auth/LinkedInOAuth.php:74
+msgid "Unknown connection."
+msgstr ""
+
+#: src/Admin/OAuthController.php:58
+msgid "LinkedIn returned no authorization code."
+msgstr ""
+
+#: src/Auth/LinkedInOAuth.php:68
+msgid "OAuth state mismatch — please retry the connection."
+msgstr ""
+
+#: src/Feed/FeedRepository.php:102
+msgid "Feed could not be saved."
+msgstr ""
+
+#: src/Fetch/Cron.php:43
+msgid "Every 15 minutes (Freshet Feeds)"
+msgstr ""
+
+#. translators: %d: HTTP status code
+#: src/License/LicenseClient.php:86
+msgid "Unexpected response from the license server (HTTP %d)."
+msgstr ""
+
+#: src/Provider/Bluesky/BlueskyProvider.php:30
+msgid "Bluesky (profile)"
+msgstr ""
+
+#: src/Provider/Bluesky/BlueskyProvider.php:38
+msgid "Bluesky handle is missing."
+msgstr ""
+
+#: src/Provider/Bluesky/BlueskyProvider.php:71
+msgid "Handle"
+msgstr ""
+
+#: src/Provider/Bluesky/BlueskyProvider.php:73
+msgid "The profile handle, e.g. name.bsky.social or a custom domain handle."
+msgstr ""
+
+#: src/Provider/LinkedIn/LinkedInProvider.php:34
+msgid "LinkedIn (company page)"
+msgstr ""
+
+#: src/Provider/LinkedIn/LinkedInProvider.php:77
+msgid "LinkedIn connection"
+msgstr ""
+
+#: src/Provider/LinkedIn/LinkedInProvider.php:82
+msgid "Organization ID"
+msgstr ""
+
+#: src/Provider/LinkedIn/LinkedInProvider.php:84
+msgid "The numeric ID of your company page (from its admin URL), e.g. 2414183."
+msgstr ""
+
+#: src/Provider/LinkedIn/LinkedInProvider.php:88
+msgid "Organization name"
+msgstr ""
+
+#: src/Provider/LinkedIn/LinkedInProvider.php:90
+msgid "Shown as the item author in templates."
+msgstr ""
+
+#: src/Provider/LinkedIn/LinkedInProvider.php:93
+msgid "Organization slug"
+msgstr ""
+
+#: src/Provider/LinkedIn/LinkedInProvider.php:95
+msgid "The company page slug, e.g. \"acme-corp\" for linkedin.com/company/acme-corp."
+msgstr ""
+
+#: src/Provider/LinkedIn/ProxyLinkedInClient.php:94
+msgid "The managed LinkedIn connection needs an active license — enter your key under Feeds → License."
+msgstr ""
+
+#: src/Provider/MockProvider.php:34
+msgid "Mock (fixture data)"
+msgstr ""
+
+#: src/Provider/MockProvider.php:51
+msgid "The mock provider is disabled in production environments. Pick a real provider for this feed."
+msgstr ""
+
+#: src/Provider/Rss/RssProvider.php:30
+msgid "RSS / Atom feed"
+msgstr ""
+
+#: src/Provider/Rss/RssProvider.php:38
+msgid "Feed URL is missing or invalid."
+msgstr ""
+
+#: src/Provider/Rss/RssProvider.php:70
+msgid "Feed URL"
+msgstr ""
+
+#: src/Provider/Rss/RssProvider.php:72
+msgid "Full URL of the RSS or Atom feed, e.g. https://example.com/feed/"
+msgstr ""
+
+#: src/Provider/YouTube/YouTubeProvider.php:32
+msgid "YouTube (channel)"
+msgstr ""
+
+#: src/Provider/YouTube/YouTubeProvider.php:40
+msgid "YouTube channel ID is missing."
+msgstr ""
+
+#: src/Provider/YouTube/YouTubeProvider.php:56
+msgid "YouTube feed not found — check the channel ID (it starts with \"UC\")."
+msgstr ""
+
+#: src/Provider/YouTube/YouTubeProvider.php:72
+msgid "Channel ID"
+msgstr ""
+
+#: src/Provider/YouTube/YouTubeProvider.php:74
+msgid "The UC… channel ID (youtube.com/channel/UC…), or a PL… playlist ID. Not the @handle."
+msgstr ""
+
+#. translators: %s: feed name
+#: templates/empty.php:34
+msgid "Freshet Feeds: no items to show for “%s”."
+msgstr ""
+
+#: templates/empty.php:41
+msgid "(Only administrators see this notice.)"
+msgstr ""
+
+#. translators: %s: video title
+#: templates/item-youtube.php:25
+msgid "Watch “%s” on YouTube"
+msgstr ""
+
+#: templates/item.php:54
+msgid "View post"
+msgstr ""
