@@ -84,16 +84,6 @@ your own — plus direct support. Not yet on sale; see freshet.studio.
 
 ## Development
 
-After cloning, arm the content guard once — `core.hooksPath` lives in
-`.git/config` and so is never cloned (`npm install` does this for you):
-
-```bash
-bash .freshet/install-hooks.sh
-```
-
-The same check runs in CI on every push, where it cannot be skipped. See
-`.freshet/README.md`.
-
 ```bash
 composer install          # PHP deps + autoloader (required to activate)
 composer test             # unit tests (Brain Monkey, no WP install needed)
