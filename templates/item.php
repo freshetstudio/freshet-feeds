@@ -9,7 +9,7 @@
  *   $feed \FreshetFeeds\Feed\Feed   The feed it belongs to.
  *
  * Item API (raw values — escape here):
- *   $item->title( $fallback )   ?string  Post/article title (LinkedIn posts often have none).
+ *   $item->title( $fallback )   ?string  Post/article title (many posts have none).
  *   $item->date( $format )      string   Localized date; '' = site format.
  *   $item->content()            string   Full plain-text body.
  *   $item->excerpt( $words )    string   Trimmed body.

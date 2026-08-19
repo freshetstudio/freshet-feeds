@@ -7,12 +7,12 @@ namespace FreshetFeeds\Tests\Unit;
 use Brain\Monkey\Functions;
 use FreshetFeeds\Feed\Feed;
 use FreshetFeeds\Provider\FetchException;
-use FreshetFeeds\Provider\LinkedIn\PostNormalizer;
+use FreshetFeeds\Provider\Mock\FixtureNormalizer;
 use FreshetFeeds\Provider\MockProvider;
 
 final class MockProviderTest extends TestCase
 {
-    private const FIXTURE = FRESHET_FEEDS_FIXTURES_DIR . '/linkedin-posts.json';
+    private const FIXTURE = FRESHET_FEEDS_FIXTURES_DIR . '/mock-posts.json';
 
     protected function setUp(): void
     {
@@ -26,7 +26,7 @@ final class MockProviderTest extends TestCase
 
     private function provider(string $fixture = self::FIXTURE): MockProvider
     {
-        return new MockProvider(new PostNormalizer(), $fixture);
+        return new MockProvider(new FixtureNormalizer(), $fixture);
     }
 
     private function feed(int $count = 10): Feed
@@ -84,7 +84,7 @@ final class MockProviderTest extends TestCase
         $this->assertCount(count($payload['elements']), $items);
 
         foreach ($items as $item) {
-            $this->assertSame('linkedin', $item->provider, 'Mock runs the same PostNormalizer as live LinkedIn');
+            $this->assertSame('mock', $item->provider, 'Mock items carry the mock provider id');
             $this->assertNotSame('', $item->id);
             $this->assertStringNotContainsString('{hashtag', $item->content);
         }

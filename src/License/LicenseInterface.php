@@ -9,9 +9,8 @@ interface LicenseInterface
     public function isPro(): bool;
 
     /**
-     * Whether this site may route LinkedIn fetches through the vendor proxy —
-     * the managed pipeline that spares customers a LinkedIn developer app.
-     * Distinct from isPro(): the wordpress.org build is "pro" (nothing
+     * Whether this site is entitled to the managed source pipeline (the vendor
+     * proxy). Distinct from isPro(): the wordpress.org build is "pro" (nothing
      * locked) yet never proxy-entitled.
      */
     public function canUseProxy(): bool;

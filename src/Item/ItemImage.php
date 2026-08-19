@@ -15,7 +15,7 @@ final readonly class ItemImage
     ) {
     }
 
-    /** Local copy when available; providers like LinkedIn serve expiring signed URLs. */
+    /** Local copy when available; some providers serve expiring signed URLs. */
     public function url(): string
     {
         return $this->localUrl ?? $this->remoteUrl;

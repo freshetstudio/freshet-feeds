@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace FreshetFeeds\Admin;
 
-use FreshetFeeds\Auth\LinkedInOAuth;
 use FreshetFeeds\Cache\ItemCache;
-use FreshetFeeds\Connection\ConnectionRepository;
-use FreshetFeeds\Connection\LinkedInConnection;
 use FreshetFeeds\Feed\Feed;
 use FreshetFeeds\Feed\FeedRepository;
 use FreshetFeeds\Fetch\FeedRunner;
@@ -17,7 +14,7 @@ use FreshetFeeds\Provider\ProviderRegistry;
 use Throwable;
 
 /**
- * The single admin screen: feed list, feed add/edit form, LinkedIn connections.
+ * The single admin screen: feed list and feed add/edit form.
  * Plain WP admin markup — no build step, no React.
  */
 final class FeedsPage
@@ -28,7 +25,6 @@ final class FeedsPage
     public function __construct(
         private readonly FeedRepository $feeds,
         private readonly ProviderRegistry $providers,
-        private readonly ConnectionRepository $connections,
         private readonly ItemCache $cache,
         private readonly FeedRunner $runner,
         private readonly LicenseInterface $license,
@@ -43,8 +39,6 @@ final class FeedsPage
         add_action('admin_post_freshet_feeds_save_feed', [$this, 'saveFeed']);
         add_action('admin_post_freshet_feeds_delete_feed', [$this, 'deleteFeed']);
         add_action('admin_post_freshet_feeds_refresh_feed', [$this, 'refreshFeed']);
-        add_action('admin_post_freshet_feeds_save_connection', [$this, 'saveConnection']);
-        add_action('admin_post_freshet_feeds_delete_connection', [$this, 'deleteConnection']);
         add_action('admin_notices', [$this, 'renderNotice']);
     }
 
@@ -72,11 +66,6 @@ final class FeedsPage
         $message = sanitize_text_field(rawurldecode(wp_unslash($_GET['freshet_feeds_message'] ?? ''))); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Recommended -- sanitized after decode; display-only notice.
 
         [$class, $text] = match ($type) {
-            'connected' => ['notice-success', sprintf(
-                /* translators: %s: connection label */
-                __('LinkedIn connection “%s” authorized.', 'freshet-feeds'),
-                $message
-            )],
             'saved' => ['notice-success', __('Saved.', 'freshet-feeds')],
             'deleted' => ['notice-success', __('Deleted.', 'freshet-feeds')],
             'refreshed' => ['notice-success', __('Feed refreshed.', 'freshet-feeds')],
@@ -162,52 +151,6 @@ final class FeedsPage
         $this->back('refreshed');
     }
 
-    public function saveConnection(): void
-    {
-        $this->authorize('freshet_feeds_save_connection');
-
-        $id = sanitize_key(wp_unslash($_POST['connection_id'] ?? ''));
-        $isNew = $id === '';
-
-        if ($isNew) {
-            $id = 'li_' . substr(md5(uniqid('', true)), 0, 8);
-        }
-
-        $existing = $this->connections->find($id);
-
-        $connection = new LinkedInConnection(
-            id: $id,
-            label: sanitize_text_field(wp_unslash($_POST['label'] ?? '')),
-            mode: LinkedInConnection::MODE_BYO,
-            clientId: sanitize_text_field(wp_unslash($_POST['client_id'] ?? '')),
-            tokenExpiresAt: $existing?->tokenExpiresAt ?? 0,
-            refreshTokenExpiresAt: $existing?->refreshTokenExpiresAt ?? 0,
-            needsReauth: $existing?->needsReauth ?? false,
-        );
-
-        $this->connections->save($connection);
-
-        // Keep existing tokens; only overwrite the secret when a new one is entered.
-        $secret = (string) wp_unslash($_POST['client_secret'] ?? '');
-        $secrets = $this->connections->tokens()->get($id);
-
-        if ($secret !== '') {
-            $secrets['client_secret'] = $secret;
-        }
-
-        $this->connections->tokens()->save($id, $secrets);
-
-        $this->back('saved', tab: 'connections');
-    }
-
-    public function deleteConnection(): void
-    {
-        $this->authorize('freshet_feeds_delete_connection');
-
-        $this->connections->delete(sanitize_key(wp_unslash($_GET['connection'] ?? '')));
-        $this->back('deleted', tab: 'connections');
-    }
-
     // --------------------------------------------------------------- rendering
 
     public function renderPage(): void
@@ -222,9 +165,7 @@ final class FeedsPage
 
         echo '<div class="wrap" style="margin-top:1.5em;">';
 
-        if ($tab === 'connections') {
-            $this->renderConnections();
-        } elseif ($tab === 'license') {
+        if ($tab === 'license') {
             $this->licenseSection?->render();
         } else {
             $editId = (int) ($_GET['edit'] ?? 0);
@@ -243,7 +184,7 @@ final class FeedsPage
     private function currentTab(): string
     {
         $tab = sanitize_key(wp_unslash($_GET['tab'] ?? ''));
-        $tabs = $this->licenseSection !== null ? ['connections', 'license'] : ['connections'];
+        $tabs = $this->licenseSection !== null ? ['license'] : [];
 
         return in_array($tab, $tabs, true) ? $tab : 'feeds';
     }
@@ -280,7 +221,6 @@ final class FeedsPage
     {
         $tabs = [
             'feeds' => __('Feeds', 'freshet-feeds'),
-            'connections' => __('Connections', 'freshet-feeds'),
         ];
 
         if ($this->licenseSection !== null) {
@@ -437,7 +377,7 @@ final class FeedsPage
             $providerSelect .= sprintf(
                 '<option value="%s"%s>%s</option>',
                 esc_attr($provider->id()),
-                selected($feed->providerId ?? 'linkedin', $provider->id(), false),
+                selected($feed->providerId ?? 'rss', $provider->id(), false),
                 esc_html($provider->label())
             );
         }
@@ -449,22 +389,7 @@ final class FeedsPage
                 $value = (string) ($feed?->setting($key, '') ?? '');
                 $name = sprintf('settings[%s]', esc_attr($key));
 
-                if (($field['type'] ?? 'text') === 'connection') {
-                    $input = '<select name="' . $name . '">';
-                    $input .= '<option value="">' . esc_html__('— select —', 'freshet-feeds') . '</option>';
-                    foreach ($this->connections->all() as $connection) {
-                        $input .= sprintf(
-                            '<option value="%s"%s>%s%s</option>',
-                            esc_attr($connection->id),
-                            selected($value, $connection->id, false),
-                            esc_html($connection->label),
-                            $connection->isConnected() ? '' : esc_html__(' (not connected)', 'freshet-feeds')
-                        );
-                    }
-                    $input .= '</select>';
-                } else {
-                    $input = sprintf('<input type="text" name="%s" class="regular-text" value="%s">', $name, esc_attr($value));
-                }
+                $input = sprintf('<input type="text" name="%s" class="regular-text" value="%s">', $name, esc_attr($value));
 
                 if (isset($field['help'])) {
                     $input .= '<p class="description">' . esc_html($field['help']) . '</p>';
@@ -499,67 +424,6 @@ final class FeedsPage
 
         submit_button($isNew ? __('Create feed', 'freshet-feeds') : __('Save feed', 'freshet-feeds'));
         printf('<a href="%s">%s</a>', esc_url($backUrl), esc_html__('Back to list', 'freshet-feeds'));
-        echo '</form>';
-    }
-
-    private function renderConnections(): void
-    {
-        echo '<h2>' . esc_html__('LinkedIn connections', 'freshet-feeds') . '</h2>';
-        echo '<p class="description">';
-        printf(
-            /* translators: %s: OAuth redirect URI */
-            esc_html__('Create a LinkedIn developer app with Community Management API access and register this redirect URL: %s', 'freshet-feeds'),
-            '<code>' . esc_html(LinkedInOAuth::redirectUri()) . '</code>'
-        );
-        echo '</p>';
-
-        $connections = $this->connections->all();
-
-        if ($connections !== []) {
-            echo '<table class="widefat striped" style="max-width:800px;"><tbody>';
-
-            foreach ($connections as $connection) {
-                $connectUrl = wp_nonce_url(
-                    add_query_arg(['action' => 'freshet_feeds_oauth_start', 'connection' => $connection->id], admin_url('admin-post.php')),
-                    'freshet_feeds_oauth_start'
-                );
-                $deleteUrl = wp_nonce_url(
-                    add_query_arg(['action' => 'freshet_feeds_delete_connection', 'connection' => $connection->id], admin_url('admin-post.php')),
-                    'freshet_feeds_delete_connection'
-                );
-
-                $status = $connection->isConnected()
-                    ? '<span style="color:#00a32a;">' . esc_html__('Connected', 'freshet-feeds') . '</span>'
-                    : '<span style="color:#b32d2e;">' . esc_html($connection->needsReauth
-                        ? __('Reauthorization needed', 'freshet-feeds')
-                        : __('Not connected', 'freshet-feeds')) . '</span>';
-
-                printf(
-                    '<tr><td><strong>%s</strong></td><td>%s</td><td>%s</td><td><a href="%s">%s</a> | <a href="%s" onclick="return confirm(%s);">%s</a></td></tr>',
-                    esc_html($connection->label),
-                    esc_html($connection->clientId),
-                    $status, // phpcs:ignore WordPress.Security.EscapeOutput -- escaped above.
-                    esc_url($connectUrl),
-                    esc_html__('Connect / reauthorize', 'freshet-feeds'),
-                    esc_url($deleteUrl),
-                    esc_attr(wp_json_encode(__('Delete this connection?', 'freshet-feeds'))),
-                    esc_html__('Delete', 'freshet-feeds')
-                );
-            }
-
-            echo '</tbody></table>';
-        }
-
-        echo '<h3>' . esc_html__('Add connection', 'freshet-feeds') . '</h3>';
-        echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '" style="max-width:800px;">';
-        wp_nonce_field('freshet_feeds_save_connection');
-        echo '<input type="hidden" name="action" value="freshet_feeds_save_connection">';
-        echo '<table class="form-table" role="presentation">';
-        $this->row(__('Label', 'freshet-feeds'), '<input type="text" name="label" class="regular-text" required>');
-        $this->row(__('Client ID', 'freshet-feeds'), '<input type="text" name="client_id" class="regular-text" required>');
-        $this->row(__('Client secret', 'freshet-feeds'), '<input type="password" name="client_secret" class="regular-text" autocomplete="new-password" required>');
-        echo '</table>';
-        submit_button(__('Add connection', 'freshet-feeds'));
         echo '</form>';
     }
 

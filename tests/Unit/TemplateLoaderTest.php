@@ -85,7 +85,7 @@ final class TemplateLoaderTest extends TestCase
         );
         $this->assertSame(
             $this->pluginDir . '/item.php',
-            $loader->locateFirst(['item-my-feed', 'item-linkedin', 'item'])
+            $loader->locateFirst(['item-my-feed', 'item-bluesky', 'item'])
         );
         $this->assertNull($loader->locateFirst(['nope-a', 'nope-b']));
     }

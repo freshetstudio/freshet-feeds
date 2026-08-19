@@ -15,7 +15,7 @@ final class UnlimitedLicenseTest extends TestCase
         $this->assertTrue($license->isPro(), 'wp.org build: nothing is locked');
         $this->assertFalse(
             $license->canUseProxy(),
-            'The managed pipeline must never leak into the directory build — it runs on the vendor LinkedIn app quota'
+            'The managed source pipeline must never leak into the directory build — it runs on the vendor quota'
         );
     }
 }

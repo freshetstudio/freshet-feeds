@@ -10,7 +10,7 @@ final readonly class Feed
     public const DEFAULT_COUNT = 10;
 
     /**
-     * @param array<string, mixed> $settings Provider-specific settings (e.g. LinkedIn: organization_id, connection_id).
+     * @param array<string, mixed> $settings Provider-specific settings (e.g. a feed URL or channel id).
      */
     public function __construct(
         public int $id,

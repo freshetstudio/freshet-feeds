@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FreshetFeeds\Provider\LinkedIn;
+namespace FreshetFeeds\Provider\Mock;
 
 use DateTimeImmutable;
 use DateTimeZone;
@@ -11,16 +11,16 @@ use FreshetFeeds\Item\ItemAuthor;
 use FreshetFeeds\Item\ItemImage;
 
 /**
- * Raw LinkedIn /rest/posts element → normalized Item. Pure — no WP, no network —
- * so the mock fixture and the live client share the exact same mapping.
+ * Raw fixture post element → normalized Item. Pure — no WP, no network — so the
+ * mock provider can exercise the full item model and template chain offline.
  */
-final class PostNormalizer
+final class FixtureNormalizer
 {
     /**
-     * @param array<string, mixed> $post Raw post element from /rest/posts.
+     * @param array<string, mixed> $post Raw post element from the fixture payload.
      * @param array<string, array{url: string, width?: int, height?: int, alt?: string}> $imageUrlMap
-     *        Resolved image URNs → download URL (+ dimensions). Signed LinkedIn URLs expire;
-     *        ImageStore localizes them later in the pipeline.
+     *        Resolved image URNs → download URL (+ dimensions). ImageStore
+     *        localizes them later in the pipeline.
      */
     public function normalize(array $post, array $imageUrlMap = [], ?ItemAuthor $organization = null): Item
     {
@@ -32,8 +32,8 @@ final class PostNormalizer
 
         return new Item(
             id: $urn,
-            provider: 'linkedin',
-            url: 'https://www.linkedin.com/feed/update/' . rawurlencode($urn),
+            provider: 'mock',
+            url: 'https://example.com/feed/update/' . rawurlencode($urn),
             date: $date,
             content: $this->plainCommentary((string) ($post['commentary'] ?? '')),
             title: $this->title($post),
@@ -81,12 +81,12 @@ final class PostNormalizer
         $content = $post['content'] ?? [];
 
         $mediaId = $content['media']['id'] ?? null;
-        if (is_string($mediaId) && str_starts_with($mediaId, 'urn:li:image:')) {
+        if (is_string($mediaId) && str_starts_with($mediaId, 'urn:mock:image:')) {
             return [$mediaId, $content['media']['altText'] ?? null];
         }
 
         $thumbnail = $content['article']['thumbnail'] ?? null;
-        if (is_string($thumbnail) && str_starts_with($thumbnail, 'urn:li:image:')) {
+        if (is_string($thumbnail) && str_starts_with($thumbnail, 'urn:mock:image:')) {
             return [$thumbnail, $content['article']['thumbnailAltText'] ?? null];
         }
 
@@ -99,7 +99,7 @@ final class PostNormalizer
     }
 
     /**
-     * Strip LinkedIn "little format" from commentary:
+     * Strip the fixture's "little format" markup from commentary:
      * {hashtag|\#|Tag} → #Tag, @[Name](urn:...) → Name, and unescape \-escaped chars.
      */
     public function plainCommentary(string $commentary): string

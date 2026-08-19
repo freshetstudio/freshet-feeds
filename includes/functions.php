@@ -20,7 +20,7 @@ if (!function_exists('freshet-feeds')) {
     /**
      * The loop API: cached items for a feed, ready to iterate in any template.
      *
-     *     foreach ( freshet_feeds( 'linkedin-main' ) as $item ) {
+     *     foreach ( freshet_feeds( 'news-main' ) as $item ) {
      *         echo esc_html( $item->title( 'Untitled' ) );
      *     }
      *
@@ -49,7 +49,7 @@ if (!function_exists('freshet_feeds_item')) {
     /**
      * Render one item through the item template hierarchy — most specific wins:
      *
-     *   {theme}/freshet-feeds/item-{feed-slug}.php   e.g. item-linkedin-main.php
+     *   {theme}/freshet-feeds/item-{feed-slug}.php   e.g. item-news-main.php
      *   {theme}/freshet-feeds/item-{provider}.php    e.g. item-youtube.php
      *   {theme}/freshet-feeds/item.php
      *   (each name also falls back to the plugin's templates/ dir)

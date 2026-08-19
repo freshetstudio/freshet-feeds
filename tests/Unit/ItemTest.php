@@ -17,8 +17,8 @@ final class ItemTest extends TestCase
     private function item(array $overrides = []): Item
     {
         return new Item(
-            id: $overrides['id'] ?? 'urn:li:share:1',
-            provider: 'linkedin',
+            id: $overrides['id'] ?? 'urn:mock:share:1',
+            provider: 'mock',
             url: 'https://example.com/post/1',
             date: new DateTimeImmutable('2026-07-01 10:00:00', new DateTimeZone('UTC')),
             content: $overrides['content'] ?? 'Hello world from the feed',
@@ -103,7 +103,7 @@ final class ItemTest extends TestCase
         $original = $this->item([
             'title' => 'A title',
             'image' => new ItemImage('https://r.example/i.jpg', 'https://l.example/i.jpg', 'alt', 100, 50),
-            'author' => new ItemAuthor('Acme', 'https://linkedin.com/company/acme'),
+            'author' => new ItemAuthor('Acme', 'https://example.com/company/acme'),
         ]);
 
         $restored = Item::fromArray($original->toArray());

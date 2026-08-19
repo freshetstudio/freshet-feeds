@@ -1,6 +1,6 @@
 # Freshet Feeds
 
-Developer-first external feeds for WordPress. LinkedIn company-page posts first; every provider feeds the same normalized item model and the same theme-overridable templates, so styling a feed is exactly like styling any other WordPress loop.
+Developer-first external feeds for WordPress. Every provider feeds the same normalized item model and the same theme-overridable templates, so styling a feed is exactly like styling any other WordPress loop.
 
 ## Why
 
@@ -8,7 +8,7 @@ Feed plugins render fixed markup you style through *their* settings UI. This plu
 
 ```php
 // Anywhere in your theme:
-foreach ( freshet_feeds( 'linkedin-main' ) as $item ) {
+foreach ( freshet_feeds( 'news-main' ) as $item ) {
     printf(
         '<article><h3>%s</h3><time>%s</time><p>%s</p></article>',
         esc_html( $item->title( 'Untitled' ) ),
@@ -18,7 +18,7 @@ foreach ( freshet_feeds( 'linkedin-main' ) as $item ) {
 }
 
 // Or render through the template chain:
-freshet_feeds_render( 'linkedin-main', [ 'layout' => 'grid' ] );
+freshet_feeds_render( 'news-main', [ 'layout' => 'grid' ] );
 ```
 
 ## Templating
@@ -40,30 +40,27 @@ Every item exposes: `title($fallback)`, `date($format)`, `datetime()`, `content(
 
 Manage feeds under **Feeds** in wp-admin. v1 providers:
 
-- **LinkedIn (company page)** — bring-your-own LinkedIn developer app with Community Management API access; OAuth connect under Feeds → LinkedIn connections. Posts are fetched via cron (stale-while-revalidate — pages never block on LinkedIn) and images are copied locally because LinkedIn image URLs expire.
-- **RSS / Atom** — any feed URL; also covers Mastodon, subreddits and podcasts.
+- **RSS / Atom** — any feed URL; also covers Mastodon, subreddits and podcasts. Posts are fetched via cron (stale-while-revalidate — pages never block on the remote) and images are copied locally because some providers serve expiring signed URLs.
 - **YouTube** — channel or playlist uploads via the Atom feed; no API key.
 - **Bluesky** — public author feed; no credentials.
-- **Mock (fixture data)** — realistic LinkedIn-shaped data with zero credentials, for building and styling templates before a live connection exists. See below.
+- **Mock (fixture data)** — realistic sample data with zero credentials, for building and styling templates before a live connection exists. See below.
 
 Third-party providers plug in via the `freshet_feeds_register_providers` action.
 
 ### Mock provider — build before you have credentials
 
-A LinkedIn developer app takes days to get through review, and evaluating the
-plugin shouldn't require one at all. Create a feed with **Mock (fixture data)**
-and you have items to build against in seconds:
+Evaluating the plugin or building templates shouldn't require a live feed at all.
+Create a feed with **Mock (fixture data)** and you have items to build against in
+seconds:
 
 1. **Feeds → Add feed**, set a name and slug, pick *Mock (fixture data)*.
-2. Save. The feed fills immediately from `data/fixtures/linkedin-posts.json` — no
+2. Save. The feed fills immediately from `data/fixtures/mock-posts.json` — no
    credentials, no network call.
 3. Build your `item.php` override, then render with `freshet_feeds_render( 'your-slug' )`.
 
-**Anything built against it works unchanged on live data.** The fixture is a real
-`GET /rest/posts` payload shape (LinkedIn-Version 202506) and runs through the same
-`PostNormalizer` the live client uses — same `Item` objects, same template chain.
-Going live means changing the feed's provider to *LinkedIn (company page)* and
-picking a connection; templates don't change.
+**Anything built against it works unchanged on live data.** The fixture runs
+through the same `FixtureNormalizer`, `Item` model and template chain a live feed
+uses. Going live means changing the feed's provider and templates don't change.
 
 The fixture deliberately covers the cases that break markup: single image,
 multi-image, shared article (the only kind with a `title`), text-only, an
@@ -78,9 +75,8 @@ and point `MockProvider` at your own copy if you want to test a specific shape.
 `staging` stops serving fixture posts the moment the environment flips, rather
 than quietly presenting them as the site owner's content.
 
-Feeds are unlimited in every build. A separately distributed build adds a
-managed LinkedIn connection — you use our approved app instead of registering
-your own — plus direct support. Not yet on sale; see freshet.studio.
+Feeds are unlimited in every build. A separately distributed build adds the
+managed source pipeline plus direct support. Not yet on sale; see freshet.studio.
 
 ## Development
 
@@ -94,7 +90,7 @@ npm run build             # build the Gutenberg block into build/
 npm run start             # block dev watch
 ```
 
-Local WordPress via Herd: symlink this directory into a site's `wp-content/plugins/` and activate. For the LinkedIn OAuth flow the site must be HTTPS (`herd secure`) and the redirect URI shown on the Feeds screen must be registered in your LinkedIn app.
+Local WordPress via Herd: symlink this directory into a site's `wp-content/plugins/` and activate.
 
 Pipeline smoke test:
 

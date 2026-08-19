@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Freshet Feeds
  * Plugin URI:        https://freshet.studio/docs
- * Description:       Developer-first external feeds (LinkedIn first) with a shared item model and theme-overridable templates.
+ * Description:       Developer-first external feeds (RSS/Atom, YouTube, Bluesky) with a shared item model and theme-overridable templates.
  * Version:           1.0.0
  * Requires at least: 6.5
  * Requires PHP:      8.2

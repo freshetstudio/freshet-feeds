@@ -20,8 +20,8 @@
       <rect x="0" y="0" width="520" height="150" rx="18" fill="#dfe3ff"/>
       <rect x="0" y="130" width="520" height="20" fill="#dfe3ff"/>
       <circle cx="44" cy="196" r="20" fill="#0A1499"/>
-      <text x="80" y="192" font-size="19" font-weight="700" fill="#2d2d2d">Freshet Studio</text>
-      <text x="80" y="214" font-size="15" font-weight="500" fill="#8FA998">LinkedIn &#183; 2d ago</text>
+      <text x="80" y="192" font-size="19" font-weight="700" fill="#2d2d2d">@freshet.studio</text>
+      <text x="80" y="214" font-size="15" font-weight="500" fill="#8FA998">Mastodon &#183; 2d ago</text>
       <rect x="40" y="244" width="360" height="16" rx="8" fill="#d4d4d8"/>
       <rect x="40" y="272" width="440" height="12" rx="6" fill="#e4e4e7"/>
       <rect x="40" y="294" width="300" height="12" rx="6" fill="#e4e4e7"/>

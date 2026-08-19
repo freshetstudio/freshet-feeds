@@ -5,8 +5,8 @@
     "title": "Feed",
     "category": "widgets",
     "icon": "rss",
-    "description": "Display an external feed (LinkedIn, ...) using Freshet Feeds templates.",
-    "keywords": ["feed", "linkedin", "social"],
+    "description": "Display an external feed (RSS, YouTube, Bluesky) using Freshet Feeds templates.",
+    "keywords": ["feed", "rss", "social"],
     "textdomain": "freshet-feeds",
     "attributes": {
         "feedId": {

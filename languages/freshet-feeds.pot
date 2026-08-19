@@ -32,11 +32,6 @@ msgid "Feeds"
 msgstr ""
 
 #. translators: %s: connection label
-#: src/Admin/FeedsPage.php:77
-msgid "LinkedIn connection “%s” authorized."
-msgstr ""
-
-#. translators: %s: connection label
 #: src/Admin/FeedsPage.php:80
 msgid "Saved."
 msgstr ""
@@ -211,15 +206,6 @@ msgstr ""
 msgid "Back to list"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:507
-msgid "LinkedIn connections"
-msgstr ""
-
-#. translators: %s: OAuth redirect URI
-#: src/Admin/FeedsPage.php:511
-msgid "Create a LinkedIn developer app with Community Management API access and register this redirect URL: %s"
-msgstr ""
-
 #: src/Admin/FeedsPage.php:532
 msgid "Connected"
 msgstr ""
@@ -272,21 +258,8 @@ msgstr ""
 msgid "Key:"
 msgstr ""
 
-#: src/Admin/LicenseSection.php:92
-msgid "Pro active — managed LinkedIn connection enabled"
-msgstr ""
-
-#: src/Admin/LicenseSection.php:93
-msgid "Invalid or expired — managed LinkedIn connection disabled"
-msgstr ""
-
 #: src/Admin/LicenseSection.php:104
 msgid "Deactivate license on this site"
-msgstr ""
-
-#. translators: %s: linked store URL
-#: src/Admin/LicenseSection.php:115
-msgid "Feeds are free and unlimited. %s adds the managed LinkedIn connection — no LinkedIn developer app required."
 msgstr ""
 
 #: src/Admin/LicenseSection.php:125
@@ -321,18 +294,6 @@ msgstr ""
 msgid "You are not allowed to manage feed connections."
 msgstr ""
 
-#: src/Admin/OAuthController.php:37 src/Auth/LinkedInOAuth.php:74
-msgid "Unknown connection."
-msgstr ""
-
-#: src/Admin/OAuthController.php:58
-msgid "LinkedIn returned no authorization code."
-msgstr ""
-
-#: src/Auth/LinkedInOAuth.php:68
-msgid "OAuth state mismatch — please retry the connection."
-msgstr ""
-
 #: src/Feed/FeedRepository.php:102
 msgid "Feed could not be saved."
 msgstr ""
@@ -360,42 +321,6 @@ msgstr ""
 
 #: src/Provider/Bluesky/BlueskyProvider.php:73
 msgid "The profile handle, e.g. name.bsky.social or a custom domain handle."
-msgstr ""
-
-#: src/Provider/LinkedIn/LinkedInProvider.php:34
-msgid "LinkedIn (company page)"
-msgstr ""
-
-#: src/Provider/LinkedIn/LinkedInProvider.php:77
-msgid "LinkedIn connection"
-msgstr ""
-
-#: src/Provider/LinkedIn/LinkedInProvider.php:82
-msgid "Organization ID"
-msgstr ""
-
-#: src/Provider/LinkedIn/LinkedInProvider.php:84
-msgid "The numeric ID of your company page (from its admin URL), e.g. 2414183."
-msgstr ""
-
-#: src/Provider/LinkedIn/LinkedInProvider.php:88
-msgid "Organization name"
-msgstr ""
-
-#: src/Provider/LinkedIn/LinkedInProvider.php:90
-msgid "Shown as the item author in templates."
-msgstr ""
-
-#: src/Provider/LinkedIn/LinkedInProvider.php:93
-msgid "Organization slug"
-msgstr ""
-
-#: src/Provider/LinkedIn/LinkedInProvider.php:95
-msgid "The company page slug, e.g. \"acme-corp\" for linkedin.com/company/acme-corp."
-msgstr ""
-
-#: src/Provider/LinkedIn/ProxyLinkedInClient.php:94
-msgid "The managed LinkedIn connection needs an active license — enter your key under Feeds → License."
 msgstr ""
 
 #: src/Provider/MockProvider.php:34

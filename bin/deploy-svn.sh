@@ -6,7 +6,7 @@
 #
 # What it does (all local, NON-destructive to the live directory):
 #   1. Builds the wp.org ZIP (bin/build-release.sh) — the stripped directory
-#      build, license stack + ProxyLinkedInClient removed. NEVER the sales build.
+#      build, license stack removed. NEVER the sales build.
 #   2. Checks out (or updates) the SVN repo into .wporg-svn/ (gitignored).
 #   3. Syncs the unzipped build into trunk/ (with --delete) and stages adds/dels.
 #   4. Syncs wp.org page assets (.wordpress-org/ → assets/).

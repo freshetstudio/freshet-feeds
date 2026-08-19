@@ -9,8 +9,8 @@ use FreshetFeeds\Item\Item;
 use FreshetFeeds\Item\ItemCollection;
 
 /**
- * Localizes item images into uploads/freshet-feeds/{feed_id}/ — LinkedIn download
- * URLs are signed and expire within days, so hotlinking is not an option.
+ * Localizes item images into uploads/freshet-feeds/{feed_id}/ — provider image
+ * URLs are often signed and expire within days, so hotlinking is not an option.
  * Plain files (not attachments): no media-library pollution, trivially pruned.
  */
 final class ImageStore

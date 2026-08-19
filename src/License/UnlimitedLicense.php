@@ -18,9 +18,9 @@ final class UnlimitedLicense implements LicenseInterface
     }
 
     /**
-     * Never. The proxy is a paid service running on the vendor's LinkedIn app
-     * quota — isPro() being true here (nothing is locked) must not leak
-     * proxy access into the directory build.
+     * Never. The managed source pipeline is a paid service running on the
+     * vendor's quota — isPro() being true here (nothing is locked) must not
+     * leak proxy access into the directory build.
      */
     public function canUseProxy(): bool
     {

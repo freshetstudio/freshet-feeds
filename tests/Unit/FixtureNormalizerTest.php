@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FreshetFeeds\Tests\Unit;
 
 use FreshetFeeds\Item\ItemAuthor;
-use FreshetFeeds\Provider\LinkedIn\PostNormalizer;
+use FreshetFeeds\Provider\Mock\FixtureNormalizer;
 
-final class PostNormalizerTest extends TestCase
+final class FixtureNormalizerTest extends TestCase
 {
-    private PostNormalizer $normalizer;
+    private FixtureNormalizer $normalizer;
 
     /** @var array<string, mixed> */
     private array $fixture;
@@ -17,9 +17,9 @@ final class PostNormalizerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->normalizer = new PostNormalizer();
+        $this->normalizer = new FixtureNormalizer();
         $this->fixture = json_decode(
-            (string) file_get_contents(FRESHET_FEEDS_FIXTURES_DIR . '/linkedin-posts.json'),
+            (string) file_get_contents(FRESHET_FEEDS_FIXTURES_DIR . '/mock-posts.json'),
             true
         );
     }
@@ -29,10 +29,10 @@ final class PostNormalizerTest extends TestCase
         $post = $this->fixture['elements'][0];
         $item = $this->normalizer->normalize($post, $this->fixture['_images']);
 
-        $this->assertSame('urn:li:share:7208881234567890001', $item->id);
-        $this->assertSame('linkedin', $item->provider);
+        $this->assertSame('urn:mock:share:7208881234567890001', $item->id);
+        $this->assertSame('mock', $item->provider);
         $this->assertSame(
-            'https://www.linkedin.com/feed/update/urn%3Ali%3Ashare%3A7208881234567890001',
+            'https://example.com/feed/update/urn%3Amock%3Ashare%3A7208881234567890001',
             $item->url
         );
         $this->assertNull($item->title, 'Plain posts have no title');
@@ -135,7 +135,7 @@ final class PostNormalizerTest extends TestCase
 
     public function testOrganizationBecomesAuthor(): void
     {
-        $org = new ItemAuthor('Acme', 'https://www.linkedin.com/company/acme');
+        $org = new ItemAuthor('Acme', 'https://example.com/company/acme');
         $item = $this->normalizer->normalize($this->fixture['elements'][0], [], $org);
 
         $this->assertSame($org, $item->author());
@@ -155,7 +155,7 @@ final class PostNormalizerTest extends TestCase
     {
         $this->assertSame('#Tag text', $this->normalizer->plainCommentary('{hashtag|\\#|Tag} text'));
         $this->assertSame('#Tag', $this->normalizer->plainCommentary('{hashtag|#|Tag}'));
-        $this->assertSame('Acme rocks', $this->normalizer->plainCommentary('@[Acme](urn:li:organization:1) rocks'));
+        $this->assertSame('Acme rocks', $this->normalizer->plainCommentary('@[Acme](urn:mock:organization:1) rocks'));
         $this->assertSame('a|b (c) [d]', $this->normalizer->plainCommentary('a\\|b \\(c\\) \\[d\\]'));
         $this->assertSame('', $this->normalizer->plainCommentary('  '));
     }

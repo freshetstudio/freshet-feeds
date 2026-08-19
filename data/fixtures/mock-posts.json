@@ -1,5 +1,5 @@
 {
-    "_comment": "Shaped like a real GET https://api.linkedin.com/rest/posts?q=author response (LinkedIn-Version 202506). Image URNs resolve via the accompanying _images map, mirroring GET /rest/images?ids=List(...). Elements 0-4 are pinned by index in tests/Unit/PostNormalizerTest.php — append new posts, never reorder. Deliberate edges: element 5 has empty commentary (title() fallback, excerpt() on empty content), element 6 is long and multi-paragraph (excerpt() truncation and wrapping), element 9 references urn:li:image:D4D22AQFixture000011 which is intentionally absent from _images (simulates a failed batch image resolve — the post must still render, without an image).",
+    "_comment": "Sample feed payload for the Mock provider: an envelope of post elements plus an _images map (image URN → resolved download URL and dimensions) and an _organization author. Elements 0-4 are pinned by index in tests/Unit/FixtureNormalizerTest.php — append new posts, never reorder. Deliberate edges: element 5 has empty commentary (title() fallback, excerpt() on empty content), element 6 is long and multi-paragraph (excerpt() truncation and wrapping), element 9 references urn:mock:image:D4D22AQFixture000011 which is intentionally absent from _images (simulates a failed batch image resolve — the post must still render, without an image).",
     "paging": {
         "start": 0,
         "count": 11,
@@ -7,8 +7,8 @@
     },
     "elements": [
         {
-            "id": "urn:li:share:7208881234567890001",
-            "author": "urn:li:organization:2414183",
+            "id": "urn:mock:share:7208881234567890001",
+            "author": "urn:mock:organization:2414183",
             "commentary": "We’re thrilled to announce our new single-origin espresso line — small-batch roasted for cafés across Europe. {hashtag|\\#|SpecialtyCoffee} {hashtag|\\#|Espresso}",
             "createdAt": 1751364000000,
             "publishedAt": 1751364000000,
@@ -16,7 +16,7 @@
             "lifecycleState": "PUBLISHED",
             "content": {
                 "media": {
-                    "id": "urn:li:image:D4D22AQFixture000001",
+                    "id": "urn:mock:image:D4D22AQFixture000001",
                     "altText": "Bags of coffee on a roastery workbench at dawn"
                 }
             },
@@ -25,9 +25,9 @@
             }
         },
         {
-            "id": "urn:li:share:7208881234567890002",
-            "author": "urn:li:organization:2414183",
-            "commentary": "Our founder sat down with @[Brew Weekly](urn:li:organization:99001) to talk sourcing, café culture, and what’s next for sustainable roasting.",
+            "id": "urn:mock:share:7208881234567890002",
+            "author": "urn:mock:organization:2414183",
+            "commentary": "Our founder sat down with @[Brew Weekly](urn:mock:organization:99001) to talk sourcing, café culture, and what’s next for sustainable roasting.",
             "createdAt": 1750759200000,
             "publishedAt": 1750762800000,
             "visibility": "PUBLIC",
@@ -37,7 +37,7 @@
                     "source": "https://example.com/interviews/carbon-neutral-roasting",
                     "title": "The Road to Carbon-Neutral Roasting",
                     "description": "An interview about sourcing and the future of specialty coffee.",
-                    "thumbnail": "urn:li:image:D4D22AQFixture000002"
+                    "thumbnail": "urn:mock:image:D4D22AQFixture000002"
                 }
             },
             "distribution": {
@@ -45,8 +45,8 @@
             }
         },
         {
-            "id": "urn:li:share:7208881234567890003",
-            "author": "urn:li:organization:2414183",
+            "id": "urn:mock:share:7208881234567890003",
+            "author": "urn:mock:organization:2414183",
             "commentary": "Team spotlight \\(part 3\\): meet the roasters keeping cafés stocked across 12 countries. Their motto: \"roast is a craft\".",
             "createdAt": 1750154400000,
             "publishedAt": 1750154400000,
@@ -56,11 +56,11 @@
                 "multiImage": {
                     "images": [
                         {
-                            "id": "urn:li:image:D4D22AQFixture000003",
+                            "id": "urn:mock:image:D4D22AQFixture000003",
                             "altText": "Three roasters in front of a drum roaster"
                         },
                         {
-                            "id": "urn:li:image:D4D22AQFixture000004",
+                            "id": "urn:mock:image:D4D22AQFixture000004",
                             "altText": "Cupping table with sample trays"
                         }
                     ]
@@ -71,8 +71,8 @@
             }
         },
         {
-            "id": "urn:li:share:7208881234567890004",
-            "author": "urn:li:organization:2414183",
+            "id": "urn:mock:share:7208881234567890004",
+            "author": "urn:mock:organization:2414183",
             "commentary": "Registration for our annual Barista Summit is now open. Two days of workshops, cuppings, and the 2027 lineup. Seats are limited — link in the first comment.",
             "createdAt": 1749549600000,
             "publishedAt": 1749549600000,
@@ -84,8 +84,8 @@
             }
         },
         {
-            "id": "urn:li:share:7208881234567890005",
-            "author": "urn:li:organization:2414183",
+            "id": "urn:mock:share:7208881234567890005",
+            "author": "urn:mock:organization:2414183",
             "commentary": "Proud moment: our R-200 drum roaster won the {hashtag|\\#|HostMilano} Innovation Award for sustainable roasting. Thank you to everyone who voted!",
             "createdAt": 1748944800000,
             "publishedAt": 1748944800000,
@@ -93,7 +93,7 @@
             "lifecycleState": "PUBLISHED",
             "content": {
                 "media": {
-                    "id": "urn:li:image:D4D22AQFixture000005",
+                    "id": "urn:mock:image:D4D22AQFixture000005",
                     "altText": "Award trophy in front of an exhibition booth"
                 }
             },
@@ -102,8 +102,8 @@
             }
         },
         {
-            "id": "urn:li:share:7208881234567890006",
-            "author": "urn:li:organization:2414183",
+            "id": "urn:mock:share:7208881234567890006",
+            "author": "urn:mock:organization:2414183",
             "commentary": "",
             "createdAt": 1748340000000,
             "publishedAt": 1748340000000,
@@ -111,7 +111,7 @@
             "lifecycleState": "PUBLISHED",
             "content": {
                 "media": {
-                    "id": "urn:li:image:D4D22AQFixture000006",
+                    "id": "urn:mock:image:D4D22AQFixture000006",
                     "altText": "Morning light across a row of filled portafilters"
                 }
             },
@@ -120,8 +120,8 @@
             }
         },
         {
-            "id": "urn:li:share:7208881234567890007",
-            "author": "urn:li:organization:2414183",
+            "id": "urn:mock:share:7208881234567890007",
+            "author": "urn:mock:organization:2414183",
             "commentary": "Three years ago we set ourselves a target that sounded slightly unreasonable at the time: every kilogram we roast would be traceable to the farm that grew it, and every farm would be paid above the reference price regardless of what the commodity market did that month.\n\nWe are not there yet. As of this quarter we are at 84% traceability by volume, up from 61% a year ago. The remaining 16% sits almost entirely in two blends where we buy through cooperatives that pool lots across dozens of smallholders — the coffee is excellent and the cooperatives are well run, but the paper trail stops at the mill.\n\nWhat we learned along the way: traceability is a logistics problem long before it is an ethics problem. It needs someone at origin who can read a weighbridge ticket, and it needs a buyer willing to accept a smaller lot at a higher price.\n\nNext year's target is 95%. We will publish the number either way, including the part where we miss it. {hashtag|\\#|SpecialtyCoffee} {hashtag|\\#|Traceability}",
             "createdAt": 1747735200000,
             "publishedAt": 1747735200000,
@@ -133,8 +133,8 @@
             }
         },
         {
-            "id": "urn:li:share:7208881234567890008",
-            "author": "urn:li:organization:2414183",
+            "id": "urn:mock:share:7208881234567890008",
+            "author": "urn:mock:organization:2414183",
             "commentary": "Our head of green coffee wrote up everything we got wrong in our first year of direct trade — the shipping assumptions, the moisture readings, the contract we should not have signed. Long read, few excuses.",
             "createdAt": 1747130400000,
             "publishedAt": 1747134000000,
@@ -145,7 +145,7 @@
                     "source": "https://example.com/journal/what-direct-trade-actually-costs",
                     "title": "What Direct Trade Actually Costs: A Year of Mistakes",
                     "description": "A frank account of the first year of buying green coffee directly: freight, moisture, contracts, and the difference between a relationship and a purchase order.",
-                    "thumbnail": "urn:li:image:D4D22AQFixture000007"
+                    "thumbnail": "urn:mock:image:D4D22AQFixture000007"
                 }
             },
             "distribution": {
@@ -153,8 +153,8 @@
             }
         },
         {
-            "id": "urn:li:share:7208881234567890009",
-            "author": "urn:li:organization:2414183",
+            "id": "urn:mock:share:7208881234567890009",
+            "author": "urn:mock:organization:2414183",
             "commentary": "Behind the scenes at this month's cupping: 42 samples, 6 hours, 1 lot that made the whole table go quiet.",
             "createdAt": 1746525600000,
             "publishedAt": 1746525600000,
@@ -164,15 +164,15 @@
                 "multiImage": {
                     "images": [
                         {
-                            "id": "urn:li:image:D4D22AQFixture000008",
+                            "id": "urn:mock:image:D4D22AQFixture000008",
                             "altText": "Numbered sample cups laid out on a cupping table"
                         },
                         {
-                            "id": "urn:li:image:D4D22AQFixture000009",
+                            "id": "urn:mock:image:D4D22AQFixture000009",
                             "altText": "A taster breaking the crust on a cup"
                         },
                         {
-                            "id": "urn:li:image:D4D22AQFixture000010",
+                            "id": "urn:mock:image:D4D22AQFixture000010",
                             "altText": "Score sheets and a laptop at the end of the session"
                         }
                     ]
@@ -183,8 +183,8 @@
             }
         },
         {
-            "id": "urn:li:share:7208881234567890010",
-            "author": "urn:li:organization:2414183",
+            "id": "urn:mock:share:7208881234567890010",
+            "author": "urn:mock:organization:2414183",
             "commentary": "New in the webshop: the Cascade filter roast is back, and this time it stays. Same producer \\(Finca La Cascada\\), same washed process, slightly lighter.",
             "createdAt": 1745920800000,
             "publishedAt": 1745920800000,
@@ -192,7 +192,7 @@
             "lifecycleState": "PUBLISHED",
             "content": {
                 "media": {
-                    "id": "urn:li:image:D4D22AQFixture000011",
+                    "id": "urn:mock:image:D4D22AQFixture000011",
                     "altText": "A bag of Cascade filter roast on a wooden counter"
                 }
             },
@@ -201,9 +201,9 @@
             }
         },
         {
-            "id": "urn:li:share:7208881234567890011",
-            "author": "urn:li:organization:2414183",
-            "commentary": "Thanks to @[Barista Guild Europe](urn:li:organization:99002) for having us at the regional heats — and congratulations to everyone who competed. {hashtag|\\#|Barista} {hashtag|\\#|Coffee}",
+            "id": "urn:mock:share:7208881234567890011",
+            "author": "urn:mock:organization:2414183",
+            "commentary": "Thanks to @[Barista Guild Europe](urn:mock:organization:99002) for having us at the regional heats — and congratulations to everyone who competed. {hashtag|\\#|Barista} {hashtag|\\#|Coffee}",
             "createdAt": 1745316000000,
             "publishedAt": 1745316000000,
             "visibility": "PUBLIC",
@@ -215,52 +215,52 @@
         }
     ],
     "_images": {
-        "urn:li:image:D4D22AQFixture000001": {
+        "urn:mock:image:D4D22AQFixture000001": {
             "url": "https://picsum.photos/seed/freshet-feeds-1/1200/675",
             "width": 1200,
             "height": 675
         },
-        "urn:li:image:D4D22AQFixture000002": {
+        "urn:mock:image:D4D22AQFixture000002": {
             "url": "https://picsum.photos/seed/freshet-feeds-2/1200/627",
             "width": 1200,
             "height": 627
         },
-        "urn:li:image:D4D22AQFixture000003": {
+        "urn:mock:image:D4D22AQFixture000003": {
             "url": "https://picsum.photos/seed/freshet-feeds-3/1200/675",
             "width": 1200,
             "height": 675
         },
-        "urn:li:image:D4D22AQFixture000004": {
+        "urn:mock:image:D4D22AQFixture000004": {
             "url": "https://picsum.photos/seed/freshet-feeds-4/1200/675",
             "width": 1200,
             "height": 675
         },
-        "urn:li:image:D4D22AQFixture000005": {
+        "urn:mock:image:D4D22AQFixture000005": {
             "url": "https://picsum.photos/seed/freshet-feeds-5/1200/675",
             "width": 1200,
             "height": 675
         },
-        "urn:li:image:D4D22AQFixture000006": {
+        "urn:mock:image:D4D22AQFixture000006": {
             "url": "https://picsum.photos/seed/freshet-feeds-6/1200/675",
             "width": 1200,
             "height": 675
         },
-        "urn:li:image:D4D22AQFixture000007": {
+        "urn:mock:image:D4D22AQFixture000007": {
             "url": "https://picsum.photos/seed/freshet-feeds-7/1200/627",
             "width": 1200,
             "height": 627
         },
-        "urn:li:image:D4D22AQFixture000008": {
+        "urn:mock:image:D4D22AQFixture000008": {
             "url": "https://picsum.photos/seed/freshet-feeds-8/1200/675",
             "width": 1200,
             "height": 675
         },
-        "urn:li:image:D4D22AQFixture000009": {
+        "urn:mock:image:D4D22AQFixture000009": {
             "url": "https://picsum.photos/seed/freshet-feeds-9/1200/900",
             "width": 1200,
             "height": 900
         },
-        "urn:li:image:D4D22AQFixture000010": {
+        "urn:mock:image:D4D22AQFixture000010": {
             "url": "https://picsum.photos/seed/freshet-feeds-10/1200/675",
             "width": 1200,
             "height": 675
@@ -268,6 +268,6 @@
     },
     "_organization": {
         "name": "Copperline Coffee Roasters",
-        "url": "https://www.linkedin.com/company/copperline-coffee"
+        "url": "https://example.com/copperline-coffee"
     }
 }

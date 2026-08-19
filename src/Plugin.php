@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace FreshetFeeds;
 
 use FreshetFeeds\Admin\FeedsPage;
-use FreshetFeeds\Admin\OAuthController;
-use FreshetFeeds\Auth\LinkedInOAuth;
 use FreshetFeeds\Blocks\FeedBlock;
 use FreshetFeeds\Cache\ImageStore;
 use FreshetFeeds\Cache\ItemCache;
 use FreshetFeeds\Cli\FetchCommand;
-use FreshetFeeds\Connection\ConnectionRepository;
-use FreshetFeeds\Connection\TokenStore;
 use FreshetFeeds\Feed\Feed;
 use FreshetFeeds\Feed\FeedRepository;
 use FreshetFeeds\Fetch\Cron;
@@ -24,9 +20,7 @@ use FreshetFeeds\License\LicenseClient;
 use FreshetFeeds\License\LicenseInterface;
 use FreshetFeeds\License\RemoteLicense;
 use FreshetFeeds\License\UpdateChecker;
-use FreshetFeeds\Provider\LinkedIn\ByoLinkedInClient;
-use FreshetFeeds\Provider\LinkedIn\LinkedInProvider;
-use FreshetFeeds\Provider\LinkedIn\PostNormalizer;
+use FreshetFeeds\Provider\Mock\FixtureNormalizer;
 use FreshetFeeds\Provider\MockProvider;
 use FreshetFeeds\Provider\ProviderRegistry;
 use FreshetFeeds\Rest\FeedsController;
@@ -43,8 +37,6 @@ final class Plugin
     private FeedRunner $runner;
     private Cron $cron;
     private TemplateLoader $templates;
-    private ConnectionRepository $connections;
-    private LinkedInOAuth $oauth;
 
     public static function boot(): self
     {
@@ -61,8 +53,7 @@ final class Plugin
         // The wordpress.org build ships without the remote-license stack
         // (Guideline 5: no locked features) — feeds are unlimited in BOTH
         // builds. What a validating key buys (direct-sold builds only) is the
-        // managed LinkedIn pipeline: canUseProxy() routes fetches through the
-        // vendor proxy so customers skip the LinkedIn developer-app dance.
+        // managed source pipeline: canUseProxy() gates that entitlement.
         $hasLicenseStack = is_readable(FRESHET_FEEDS_DIR . 'src/License/RemoteLicense.php');
         $licenseClient = $hasLicenseStack ? new LicenseClient() : null;
 
@@ -79,8 +70,6 @@ final class Plugin
         $this->feeds = new FeedRepository();
         $this->cache = new ItemCache();
         $this->providers = new ProviderRegistry();
-        $this->connections = new ConnectionRepository(new TokenStore());
-        $this->oauth = new LinkedInOAuth($this->connections);
         $this->runner = new FeedRunner($this->providers, $this->cache, new ImageStore(), new FetchLock());
         $this->cron = new Cron($this->feeds, $this->cache, $this->runner);
         $this->templates = new TemplateLoader(FRESHET_FEEDS_DIR . 'templates');
@@ -104,8 +93,7 @@ final class Plugin
         $licenseSection = $licenseClient !== null ? new LicenseSection($licenseClient, $this->license) : null;
 
         $this->cron->hooks();
-        (new FeedsPage($this->feeds, $this->providers, $this->connections, $this->cache, $this->runner, $this->license, $licenseSection))->hooks();
-        (new OAuthController($this->oauth))->hooks();
+        (new FeedsPage($this->feeds, $this->providers, $this->cache, $this->runner, $this->license, $licenseSection))->hooks();
         $licenseSection?->hooks();
 
         // Absent from the wordpress.org build (updates come from the directory);
@@ -130,15 +118,7 @@ final class Plugin
 
     private function registerProviders(): void
     {
-        $normalizer = new PostNormalizer();
         $rssNormalizer = new \FreshetFeeds\Provider\Rss\RssNormalizer();
-
-        $this->providers->register(new LinkedInProvider(
-            new ByoLinkedInClient($this->connections),
-            $normalizer,
-            $this->connections,
-            $this->license,
-        ));
 
         $this->providers->register(new \FreshetFeeds\Provider\Rss\RssProvider($rssNormalizer));
         $this->providers->register(new \FreshetFeeds\Provider\YouTube\YouTubeProvider($rssNormalizer));
@@ -147,8 +127,8 @@ final class Plugin
         ));
 
         $this->providers->register(new MockProvider(
-            $normalizer,
-            FRESHET_FEEDS_DIR . 'data/fixtures/linkedin-posts.json',
+            new FixtureNormalizer(),
+            FRESHET_FEEDS_DIR . 'data/fixtures/mock-posts.json',
         ));
 
         /**
@@ -248,15 +228,5 @@ final class Plugin
     public function license(): LicenseInterface
     {
         return $this->license;
-    }
-
-    public function connections(): ConnectionRepository
-    {
-        return $this->connections;
-    }
-
-    public function oauth(): LinkedInOAuth
-    {
-        return $this->oauth;
     }
 }

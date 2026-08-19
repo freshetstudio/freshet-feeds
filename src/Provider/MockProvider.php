@@ -7,19 +7,19 @@ namespace FreshetFeeds\Provider;
 use FreshetFeeds\Feed\Feed;
 use FreshetFeeds\Item\ItemAuthor;
 use FreshetFeeds\Item\ItemCollection;
-use FreshetFeeds\Provider\LinkedIn\PostNormalizer;
+use FreshetFeeds\Provider\Mock\FixtureNormalizer;
 
 /**
- * Fixture-backed provider for development and template work: runs a real-shaped
- * LinkedIn payload through the same PostNormalizer the live client uses,
- * so anything built against it works unchanged with real LinkedIn data.
+ * Fixture-backed provider for development and template work: runs a bundled
+ * sample payload through FixtureNormalizer and the shared item model, so
+ * templates can be built and styled offline with no credentials.
  */
 final class MockProvider implements ProviderInterface
 {
     public const ID = 'mock';
 
     public function __construct(
-        private readonly PostNormalizer $normalizer,
+        private readonly FixtureNormalizer $normalizer,
         private readonly string $fixturePath,
     ) {
     }
@@ -61,7 +61,7 @@ final class MockProvider implements ProviderInterface
         $data = json_decode((string) file_get_contents($this->fixturePath), true);
 
         if (!is_array($data) || !is_array($data['elements'] ?? null)) {
-            throw new FetchException(esc_html('Fixture is not a valid LinkedIn posts payload.'));
+            throw new FetchException(esc_html('Fixture is not a valid mock posts payload.'));
         }
 
         $imageUrlMap = is_array($data['_images'] ?? null) ? $data['_images'] : [];

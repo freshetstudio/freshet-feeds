@@ -6,7 +6,7 @@ namespace FreshetFeeds\License;
 
 /**
  * License backed by the remote license server. Feeds are unlimited regardless;
- * what a validating key buys is the managed LinkedIn pipeline (canUseProxy).
+ * what a validating key buys is the managed source pipeline (canUseProxy).
  * Validation results are cached in a transient (12h); a lapsed cache
  * re-validates lazily and FAILS OPEN for one interval on network errors — a
  * hiccup at the license server must never downgrade a paying customer's site.
