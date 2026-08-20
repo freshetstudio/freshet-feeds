@@ -4,6 +4,11 @@
 #
 #   bash bin/render-assets.sh
 #
+# THIS FILE IS IDENTICAL IN EVERY FRESHET PLUGIN REPO. What to render is data
+# and lives in ASSET_RENDERS in bin/release.conf, one entry per output:
+#
+#     <svg> <render-size> <out.png> <crop-height>
+#
 # wp.org banners/screenshots must be PNG (SVG is only accepted for the icon,
 # which therefore ships as-is). macOS has no ImageMagick/PIL, so we rasterise
 # with qlmanage (WebKit) — which pads its output to a square and top-left-aligns
@@ -15,8 +20,29 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+CONF="bin/release.conf"
+if [ ! -f "$CONF" ]; then
+  echo "✗ Missing $CONF — the per-plugin half of the release toolchain." >&2
+  exit 1
+fi
+
+ASSET_RENDERS=()
+
+# shellcheck source=/dev/null
+. "$CONF"
+
 DIR=".wordpress-org"
 CROP="node bin/pngcrop.js"
+
+if [ ${#ASSET_RENDERS[@]} -eq 0 ]; then
+  echo "No ASSET_RENDERS configured in $CONF — nothing to rasterise."
+  exit 0
+fi
+
+if [ ! -d "$DIR" ]; then
+  echo "✗ Missing $DIR/ — the SVG sources for the wp.org page assets live there." >&2
+  exit 1
+fi
 
 render() { # <svg> <render-size> <out.png> <crop-height>
   qlmanage -t -s "$2" -o "$DIR" "$DIR/$1" >/dev/null 2>&1
@@ -24,10 +50,9 @@ render() { # <svg> <render-size> <out.png> <crop-height>
   rm -f "$DIR/${1%.svg}.svg.png"
 }
 
-# banner.svg is 772x250; render at 772 and 1544, crop to the two banner sizes.
-render banner.svg      772  banner-772x250.png   250
-render banner.svg     1544  banner-1544x500.png  500
-# screenshot-1.svg is a 1280x1280 square; crop to 1280x960.
-render screenshot-1.svg 1280 screenshot-1.png    960
+for spec in "${ASSET_RENDERS[@]}"; do
+  # shellcheck disable=SC2086
+  render $spec
+done
 
 echo "✓ Assets rendered in $DIR/ (icon.svg ships as-is)"

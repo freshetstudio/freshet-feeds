@@ -1,12 +1,15 @@
 #!/bin/bash
 #
-# Stage a Freshet Feeds release into the wp.org SVN working copy.
+# Stage a release into this plugin's wordpress.org SVN working copy.
 #
 #   bash bin/deploy-svn.sh [--skip-build]
 #
+# THIS FILE IS IDENTICAL IN EVERY FRESHET PLUGIN REPO. The slug, the version
+# constant and the SVN account live in bin/release.conf.
+#
 # What it does (all local, NON-destructive to the live directory):
-#   1. Builds the wp.org ZIP (bin/build-release.sh) — the stripped directory
-#      build, license stack removed. NEVER the sales build.
+#   1. Builds the wp.org ZIP (bin/build-release.sh) — the directory build,
+#      never a direct-sales build.
 #   2. Checks out (or updates) the SVN repo into .wporg-svn/ (gitignored).
 #   3. Syncs the unzipped build into trunk/ (with --delete) and stages adds/dels.
 #   4. Syncs wp.org page assets (.wordpress-org/ → assets/).
@@ -22,16 +25,33 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-SLUG="freshet-feeds"
+CONF="bin/release.conf"
+if [ ! -f "$CONF" ]; then
+  echo "✗ Missing $CONF — the per-plugin half of the release toolchain." >&2
+  exit 1
+fi
+
+SLUG=""
+VERSION_FILE=""
+VERSION_CONST=""
+SVN_USER=""
+
+# shellcheck source=/dev/null
+. "$CONF"
+
+if [ -z "$SLUG" ] || [ -z "$VERSION_FILE" ] || [ -z "$VERSION_CONST" ]; then
+  echo "✗ $CONF must set SLUG, VERSION_FILE and VERSION_CONST" >&2
+  exit 1
+fi
+
 SVN_URL="https://plugins.svn.wordpress.org/${SLUG}"
-SVN_USER="kristoffbertram"
 SVN_DIR=".wporg-svn"
 ASSETS_SRC=".wordpress-org"
 
-VERSION=$(grep -m1 "FRESHET_FEEDS_VERSION" "${SLUG}.php" | sed "s/.*'\([0-9.]*\)'.*/\1/")
+VERSION=$(grep -m1 "$VERSION_CONST" "$VERSION_FILE" | sed "s/.*'\([0-9.]*\)'.*/\1/")
 
 if [ -z "$VERSION" ]; then
-  echo "✗ Could not read FRESHET_FEEDS_VERSION from ${SLUG}.php" >&2
+  echo "✗ Could not read ${VERSION_CONST} from ${VERSION_FILE}" >&2
   exit 1
 fi
 
@@ -84,6 +104,8 @@ if [ -d "$ASSETS_SRC" ]; then
     --include='screenshot-*.jpg' \
     --exclude='*' \
     "$ASSETS_SRC/" "$SVN_DIR/assets/"
+else
+  echo "▶ No ${ASSETS_SRC}/ yet — skipping page assets"
 fi
 
 # 5. Stage adds and deletes across the whole working copy.
