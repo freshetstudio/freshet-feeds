@@ -1,21 +1,50 @@
 # Copyright (C) 2026 Freshet Studio
-# This file is distributed under the same license as the Freshet Feeds plugin.
+# This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Freshet Feeds 1.0.0\n"
+"Project-Id-Version: Freshet Feeds 1.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/freshet-feeds\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-26T17:13:22+00:00\n"
+"POT-Creation-Date: 2026-08-20T11:53:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: freshet-pot-extract 1.0 (Python tokenizer fallback)\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: freshet-feeds\n"
+
+#. Plugin Name of the plugin
+#: freshet-feeds.php
+#: src/Admin/FeedsPage.php:48
+#: src/Admin/FeedsPage.php:239
+#: blocks/feed/edit.js:55
+msgid "Freshet Feeds"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: freshet-feeds.php
+msgid "https://freshet.studio/docs"
+msgstr ""
+
+#. Description of the plugin
+#: freshet-feeds.php
+msgid "Developer-first external feeds (RSS/Atom, YouTube, Bluesky) with a shared item model and theme-overridable templates."
+msgstr ""
+
+#. Author of the plugin
+#: freshet-feeds.php
+msgid "Freshet Studio"
+msgstr ""
+
+#. Author URI of the plugin
+#: freshet-feeds.php
+msgid "https://freshet.studio"
+msgstr ""
 
 #. translators: %s: current PHP version
 #: freshet-feeds.php:34
+#, php-format
 msgid "Freshet Feeds requires PHP 8.2 or newer. This site runs PHP %s — the plugin is inactive."
 msgstr ""
 
@@ -23,226 +52,185 @@ msgstr ""
 msgid "Freshet Feeds is missing its Composer autoloader. Run \"composer install\" in the plugin directory."
 msgstr ""
 
-#: src/Admin/FeedsPage.php:54 src/Admin/FeedsPage.php:299
-msgid "Freshet Feeds"
-msgstr ""
-
-#: src/Admin/FeedsPage.php:55 src/Admin/FeedsPage.php:282 src/Feed/FeedRepository.php:22
+#: src/Admin/FeedsPage.php:49
+#: src/Admin/FeedsPage.php:223
+#: src/Feed/FeedRepository.php:22
 msgid "Feeds"
 msgstr ""
 
-#. translators: %s: connection label
-#: src/Admin/FeedsPage.php:80
+#: src/Admin/FeedsPage.php:69
 msgid "Saved."
 msgstr ""
 
-#. translators: %s: connection label
-#: src/Admin/FeedsPage.php:81
+#: src/Admin/FeedsPage.php:70
 msgid "Deleted."
 msgstr ""
 
-#: src/Admin/FeedsPage.php:82
+#: src/Admin/FeedsPage.php:71
 msgid "Feed refreshed."
 msgstr ""
 
-#: src/Admin/FeedsPage.php:83
+#: src/Admin/FeedsPage.php:72
 msgid "Something went wrong."
 msgstr ""
 
-#: src/Admin/FeedsPage.php:103
+#: src/Admin/FeedsPage.php:92
 msgid "Pick a provider for this feed."
 msgstr ""
 
 #. translators: %s: provider id submitted with the form
-#: src/Admin/FeedsPage.php:106
+#: src/Admin/FeedsPage.php:95
+#, php-format
 msgid "Unknown provider “%s”."
 msgstr ""
 
-#: src/Admin/FeedsPage.php:153
+#: src/Admin/FeedsPage.php:142
 msgid "Unknown feed."
 msgstr ""
 
-#: src/Admin/FeedsPage.php:159
+#: src/Admin/FeedsPage.php:148
 msgid "Fetch failed."
 msgstr ""
 
-#: src/Admin/FeedsPage.php:283
-msgid "Connections"
-msgstr ""
-
-#: src/Admin/FeedsPage.php:287 src/Admin/LicenseSection.php:83
+#: src/Admin/FeedsPage.php:227
+#: src/Admin/LicenseSection.php:83
 msgid "License"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:304
+#: src/Admin/FeedsPage.php:244
 msgid "Pro"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:306
+#: src/Admin/FeedsPage.php:246
 msgid "Free"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:307
+#: src/Admin/FeedsPage.php:247
 msgid "Upgrade"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:310
+#: src/Admin/FeedsPage.php:250
 msgid "Docs"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:311
+#: src/Admin/FeedsPage.php:251
 msgid "Support"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:335 src/Admin/FeedsPage.php:410
+#: src/Admin/FeedsPage.php:275
+#: src/Admin/FeedsPage.php:350
 msgid "Add feed"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:340 src/Admin/FeedsPage.php:419
+#: src/Admin/FeedsPage.php:280
+#: src/Admin/FeedsPage.php:359
 msgid "Name"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:340 src/Admin/FeedsPage.php:423
+#: src/Admin/FeedsPage.php:280
+#: src/Admin/FeedsPage.php:363
 msgid "Slug"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:340 src/Admin/FeedsPage.php:445
+#: src/Admin/FeedsPage.php:280
+#: src/Admin/FeedsPage.php:385
 msgid "Provider"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:340
+#: src/Admin/FeedsPage.php:280
 msgid "Last fetched"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:340
+#: src/Admin/FeedsPage.php:280
 msgid "Status"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:347
+#: src/Admin/FeedsPage.php:287
 msgid "No feeds yet."
 msgstr ""
 
 #. translators: %s: provider id stored on the feed, or a dash when empty
-#: src/Admin/FeedsPage.php:372
+#: src/Admin/FeedsPage.php:312
+#, php-format
 msgid "Unknown provider (%s)"
 msgstr ""
 
 #. translators: %s: human time diff
-#: src/Admin/FeedsPage.php:376
+#: src/Admin/FeedsPage.php:316
+#, php-format
 msgid "%s ago"
 msgstr ""
 
 #. translators: %s: human time diff
-#: src/Admin/FeedsPage.php:377
+#: src/Admin/FeedsPage.php:317
 msgid "never"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:384
+#: src/Admin/FeedsPage.php:324
 msgid "Edit"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:386
+#: src/Admin/FeedsPage.php:326
 msgid "Refresh"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:388
+#: src/Admin/FeedsPage.php:328
 msgid "Delete this feed?"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:389 src/Admin/FeedsPage.php:546
+#: src/Admin/FeedsPage.php:329
 msgid "Delete"
 msgstr ""
 
 #. translators: %s: PHP code example
-#: src/Admin/FeedsPage.php:399
+#: src/Admin/FeedsPage.php:339
+#, php-format
 msgid "Render a feed in your theme with %s or the “Feed” block."
 msgstr ""
 
-#: src/Admin/FeedsPage.php:410
+#: src/Admin/FeedsPage.php:350
 msgid "Edit feed"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:427
+#: src/Admin/FeedsPage.php:367
 msgid "Used in code: freshet_feeds_render( 'slug' ). Leave empty to derive from the name."
 msgstr ""
 
-#: src/Admin/FeedsPage.php:454
-msgid "— select —"
-msgstr ""
-
-#: src/Admin/FeedsPage.php:461
-msgid " (not connected)"
-msgstr ""
-
-#: src/Admin/FeedsPage.php:478
+#: src/Admin/FeedsPage.php:403
 msgid "Items"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:482
+#: src/Admin/FeedsPage.php:407
 msgid "Cache TTL (seconds)"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:488
+#: src/Admin/FeedsPage.php:413
 msgid "Default layout"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:492
+#: src/Admin/FeedsPage.php:417
+#: blocks/feed/edit.js:33
 msgid "Grid"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:494
+#: src/Admin/FeedsPage.php:419
+#: blocks/feed/edit.js:34
 msgid "List"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:500
+#: src/Admin/FeedsPage.php:425
 msgid "Create feed"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:500
+#: src/Admin/FeedsPage.php:425
 msgid "Save feed"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:501
+#: src/Admin/FeedsPage.php:426
 msgid "Back to list"
 msgstr ""
 
-#: src/Admin/FeedsPage.php:532
-msgid "Connected"
-msgstr ""
-
-#: src/Admin/FeedsPage.php:534
-msgid "Reauthorization needed"
-msgstr ""
-
-#: src/Admin/FeedsPage.php:535
-msgid "Not connected"
-msgstr ""
-
-#: src/Admin/FeedsPage.php:543
-msgid "Connect / reauthorize"
-msgstr ""
-
-#: src/Admin/FeedsPage.php:545
-msgid "Delete this connection?"
-msgstr ""
-
-#: src/Admin/FeedsPage.php:553 src/Admin/FeedsPage.php:562
-msgid "Add connection"
-msgstr ""
-
-#: src/Admin/FeedsPage.php:558
-msgid "Label"
-msgstr ""
-
-#: src/Admin/FeedsPage.php:559
-msgid "Client ID"
-msgstr ""
-
-#: src/Admin/FeedsPage.php:560
-msgid "Client secret"
-msgstr ""
-
-#: src/Admin/FeedsPage.php:578
+#: src/Admin/FeedsPage.php:442
 msgid "You are not allowed to manage feeds."
 msgstr ""
 
@@ -258,8 +246,22 @@ msgstr ""
 msgid "Key:"
 msgstr ""
 
+#: src/Admin/LicenseSection.php:92
+msgid "Pro active — managed source pipeline enabled"
+msgstr ""
+
+#: src/Admin/LicenseSection.php:93
+msgid "Invalid or expired — managed source pipeline disabled"
+msgstr ""
+
 #: src/Admin/LicenseSection.php:104
 msgid "Deactivate license on this site"
+msgstr ""
+
+#. translators: %s: linked store URL
+#: src/Admin/LicenseSection.php:115
+#, php-format
+msgid "Feeds are free and unlimited. %s adds the managed source pipeline and direct support."
 msgstr ""
 
 #: src/Admin/LicenseSection.php:125
@@ -290,10 +292,6 @@ msgstr ""
 msgid "You are not allowed to manage the license."
 msgstr ""
 
-#: src/Admin/OAuthController.php:28 src/Admin/OAuthController.php:50
-msgid "You are not allowed to manage feed connections."
-msgstr ""
-
 #: src/Feed/FeedRepository.php:102
 msgid "Feed could not be saved."
 msgstr ""
@@ -304,6 +302,7 @@ msgstr ""
 
 #. translators: %d: HTTP status code
 #: src/License/LicenseClient.php:86
+#, php-format
 msgid "Unexpected response from the license server (HTTP %d)."
 msgstr ""
 
@@ -369,6 +368,7 @@ msgstr ""
 
 #. translators: %s: feed name
 #: templates/empty.php:34
+#, php-format
 msgid "Freshet Feeds: no items to show for “%s”."
 msgstr ""
 
@@ -378,9 +378,67 @@ msgstr ""
 
 #. translators: %s: video title
 #: templates/item-youtube.php:25
+#, php-format
 msgid "Watch “%s” on YouTube"
 msgstr ""
 
 #: templates/item.php:54
 msgid "View post"
+msgstr ""
+
+#: blocks/feed/edit.js:21
+msgid "Feed settings"
+msgstr ""
+
+#: blocks/feed/edit.js:29
+msgid "Layout"
+msgstr ""
+
+#: blocks/feed/edit.js:32
+msgid "Feed default"
+msgstr ""
+
+#: blocks/feed/edit.js:37
+msgid "Themes can add custom layouts via freshet-feeds/layout-{name}.php."
+msgstr ""
+
+#: blocks/feed/edit.js:43
+msgid "Items (0 = feed default)"
+msgstr ""
+
+#: blocks/feed/edit.js:56
+msgid "Select a feed in the block settings sidebar. Feeds are managed under the “Feeds” admin menu."
+msgstr ""
+
+#: blocks/feed/edit.js:87
+msgid "Feed"
+msgstr ""
+
+#: blocks/feed/edit.js:90
+msgid "— select a feed —"
+msgstr ""
+
+#: blocks/feed/block.json
+msgctxt "block title"
+msgid "Feed"
+msgstr ""
+
+#: blocks/feed/block.json
+msgctxt "block description"
+msgid "Display an external feed (RSS, YouTube, Bluesky) using Freshet Feeds templates."
+msgstr ""
+
+#: blocks/feed/block.json
+msgctxt "block keyword"
+msgid "feed"
+msgstr ""
+
+#: blocks/feed/block.json
+msgctxt "block keyword"
+msgid "rss"
+msgstr ""
+
+#: blocks/feed/block.json
+msgctxt "block keyword"
+msgid "social"
 msgstr ""
