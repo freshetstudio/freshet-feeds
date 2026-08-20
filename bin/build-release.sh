@@ -14,14 +14,18 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-# Build output counts as published — the exclude list below and .gitignore are
+# Build output counts as published — the exclude list above and .gitignore are
 # separate lists, and only this one decides what a customer receives. So assert
-# it rather than trust it. Filename rules come from .freshet/content-guard.sh,
-# the same source the pre-commit hook and CI use.
+# it rather than trust it: repo-local notes, deploy scripts and credential files
+# never belong in a distributed archive, whatever the exclude list says.
+INTERNAL_FILES='(^|/)(CLAUDE\.md|TODO\.md|DEPLOY\.(md|sh)|CREDENTIALS\.md|\.env(\..+)?)$'
+
 assert_shippable() {
-  local zip="$1" stray
-  if ! unzip -Z1 "$zip" | bash .freshet/content-guard.sh --paths; then
-    echo "Release blocked: internal file inside $zip" >&2
+  local zip="$1" stray internal
+  internal=$(unzip -Z1 "$zip" | grep -E "$INTERNAL_FILES" || true)
+  if [ -n "$internal" ]; then
+    echo "Release blocked: internal file inside $zip:" >&2
+    echo "$internal" | sed 's/^/  /' >&2
     exit 1
   fi
   stray=$(unzip -Z1 "$zip" | grep -iE '\.md$' || true)
@@ -100,9 +104,9 @@ rsync -a \
   --exclude='.DS_Store' \
   ./ "$STAGE/"
 
-# The "prepare" script runs bash .freshet/install-hooks.sh on every npm install,
-# but .freshet is excluded above — so `npm install` in the shipped package would
-# fail. Strip it from the staged copy only; the dev repo keeps its hook install.
+# readme.txt tells a reviewer to run `npm install && npm run build` on the
+# shipped package, so the staged package.json must carry no lifecycle script
+# that reaches for a file the archive does not contain.
 node -e "const fs=require('fs'),f='$STAGE/package.json',p=JSON.parse(fs.readFileSync(f));if(p.scripts){delete p.scripts.prepare}fs.writeFileSync(f,JSON.stringify(p,null,4)+'\n')"
 
 (cd dist && zip -qr "$(basename "$ZIP")" freshet-feeds)
