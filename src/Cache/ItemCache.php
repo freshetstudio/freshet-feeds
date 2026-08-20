@@ -34,7 +34,11 @@ final class ItemCache
 
     public function store(Feed $feed, ItemCollection $items): void
     {
-        update_post_meta($feed->id, self::META_ITEMS, wp_json_encode($items->toArray()));
+        // update_post_meta() unslashes what it is given, which would strip every
+        // backslash out of the encoded payload: escapes like \" and \uXXXX would
+        // come back mangled, and a single quote character in an item would leave
+        // the stored JSON unparseable. Slash it so the round trip is lossless.
+        update_post_meta($feed->id, self::META_ITEMS, wp_slash(wp_json_encode($items->toArray())));
         update_post_meta($feed->id, self::META_FETCHED_AT, time());
         delete_post_meta($feed->id, self::META_LAST_ERROR);
         delete_post_meta($feed->id, self::META_FAIL_COUNT);
@@ -55,7 +59,7 @@ final class ItemCache
     /** Failures never clobber stale items — they only mark the feed errored. */
     public function recordError(Feed $feed, string $message): void
     {
-        update_post_meta($feed->id, self::META_LAST_ERROR, $message);
+        update_post_meta($feed->id, self::META_LAST_ERROR, wp_slash($message));
         update_post_meta($feed->id, self::META_FAIL_COUNT, $this->failCount($feed) + 1);
     }
 

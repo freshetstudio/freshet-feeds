@@ -2,7 +2,7 @@
 Contributors: kristoffbertram
 Tags: feeds, youtube, rss, bluesky
 Requires at least: 6.5
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.2
 Stable tag: 1.0.1
 License: GPLv2 or later
@@ -89,7 +89,8 @@ No. Feeds are fetched in the background and served from a local cache; pages nev
 == Changelog ==
 
 = 1.0.1 =
-* First release published on WordPress.org. No functional changes from 1.0.0.
+* First release published on WordPress.org.
+* Fixed cached feed items being corrupted, and in some cases discarded entirely, when an item contained a quote or a non-ASCII character.
 
 = 1.0.0 =
 * Initial release: RSS/Atom, YouTube, and Bluesky providers.

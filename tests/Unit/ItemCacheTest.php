@@ -26,12 +26,17 @@ final class ItemCacheTest extends TestCase
         Functions\when('get_post_meta')->alias(
             fn (int $id, string $key, bool $single): mixed => $this->meta[$id][$key] ?? ''
         );
+        // WordPress unslashes meta on the way in, so the fake store does too —
+        // a store that keeps what it is handed cannot catch a slashing bug.
         Functions\when('update_post_meta')->alias(
             function (int $id, string $key, mixed $value): bool {
-                $this->meta[$id][$key] = $value;
+                $this->meta[$id][$key] = is_string($value) ? stripslashes($value) : $value;
 
                 return true;
             }
+        );
+        Functions\when('wp_slash')->alias(
+            static fn (mixed $v): mixed => is_string($v) ? addslashes($v) : $v
         );
         Functions\when('delete_post_meta')->alias(
             function (int $id, string $key): bool {
@@ -69,6 +74,28 @@ final class ItemCacheTest extends TestCase
         $this->assertCount(1, $cached);
         $this->assertSame('a', $cached->all()[0]->id);
         $this->assertTrue($cache->isFresh($feed));
+    }
+
+    public function testStoreSurvivesCharactersThatJsonEscapes(): void
+    {
+        $cache = new ItemCache();
+        $feed = $this->feed();
+
+        $cache->store($feed, new ItemCollection([
+            new Item(
+                'a',
+                'mock',
+                'https://x.test/a',
+                new DateTimeImmutable('now', new DateTimeZone('UTC')),
+                "A quote \" and a non-breaking\u{00a0}space",
+                'He said "hello"',
+            ),
+        ]));
+
+        $cached = $cache->get($feed);
+        $this->assertNotNull($cached, 'A quote in an item must not make the cache unreadable');
+        $this->assertSame('He said "hello"', $cached->all()[0]->title);
+        $this->assertSame("A quote \" and a non-breaking\u{00a0}space", $cached->all()[0]->content);
     }
 
     public function testStoreClearsErrorState(): void

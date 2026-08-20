@@ -88,13 +88,15 @@ final class FeedRepository
 
         $id = (int) $result;
 
-        update_post_meta($id, self::META_CONFIG, wp_json_encode([
+        // Slashed on the way in: update_post_meta() unslashes, and an encoded
+        // payload that loses its backslashes stops being parseable JSON.
+        update_post_meta($id, self::META_CONFIG, wp_slash(wp_json_encode([
             'provider' => $feed->providerId,
             'settings' => $feed->settings,
             'count' => $feed->count,
             'ttl' => $feed->ttl,
             'default_layout' => $feed->defaultLayout,
-        ]));
+        ])));
 
         $saved = $this->find($id);
 
