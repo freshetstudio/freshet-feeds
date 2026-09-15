@@ -11,9 +11,16 @@ use FreshetFeeds\License\RemoteLicense;
 /**
  * License block on the Feeds admin page: enter key → activate; deactivate;
  * status display. Server-side gating stays in FeedRepository — this is UI.
+ *
+ * It owns its tab on the screen and the tier pill in the header, through the
+ * screen's hooks (`freshet_feeds_tabs`, `freshet_feeds_render_tab`,
+ * `freshet_feeds_header_meta`): the tab appears wherever there is a license
+ * stack to show at all, which is every build that carries this file.
  */
 final class LicenseSection
 {
+    public const TAB = 'license';
+
     public function __construct(
         private readonly LicenseClient $client,
         private readonly LicenseInterface $license,
@@ -25,6 +32,62 @@ final class LicenseSection
         add_action('admin_post_freshet_feeds_activate_license', [$this, 'activate']);
         add_action('admin_post_freshet_feeds_deactivate_license', [$this, 'deactivate']);
         add_action('admin_post_freshet_feeds_save_data_settings', [$this, 'saveDataSettings']);
+        add_filter('freshet_feeds_tabs', [$this, 'addTab']);
+        add_action('freshet_feeds_render_tab', [$this, 'renderTab']);
+        add_action('freshet_feeds_header_meta', [$this, 'renderPill']);
+        // Priority 20: after FeedsPage::enqueueAdminStyle() has registered the handle.
+        add_action('admin_enqueue_scripts', [$this, 'enqueueStyle'], 20);
+    }
+
+    /**
+     * @param array<string, string> $tabs slug => label
+     * @return array<string, string>
+     */
+    public function addTab(array $tabs): array
+    {
+        $tabs[self::TAB] = __('License', 'freshet-feeds');
+
+        return $tabs;
+    }
+
+    public function renderTab(string $tab): void
+    {
+        if ($tab === self::TAB) {
+            $this->render();
+        }
+    }
+
+    /**
+     * The tier, in the header's meta strip, from the license itself rather
+     * than from which files are on disk.
+     */
+    public function renderPill(): void
+    {
+        if ($this->license->isPro()) {
+            printf('<span class="frst-header__pill frst-header__pill--pro">%s</span>', esc_html__('Pro', 'freshet-feeds'));
+
+            return;
+        }
+
+        printf('<span class="frst-header__pill frst-header__pill--free">%s</span>', esc_html__('Free', 'freshet-feeds'));
+        printf(
+            '<a href="https://freshet.studio" target="_blank" rel="noopener noreferrer">%s</a>',
+            esc_html__('Upgrade', 'freshet-feeds')
+        );
+    }
+
+    /** The pill's styles, on exactly the screen the shared sheet is on. */
+    public function enqueueStyle(): void
+    {
+        if (!wp_style_is('freshet-feeds-admin', 'enqueued')) {
+            return;
+        }
+
+        wp_add_inline_style('freshet-feeds-admin', '
+            .frst-header__pill { border-radius: 12px; padding: 3px 10px; font-weight: 600; font-size: 12px; }
+            .frst-header__pill--pro { background: #edfaef; color: #00832a; }
+            .frst-header__pill--free { background: #f0f0f1; color: #50575e; }
+        ');
     }
 
     public function saveDataSettings(): void
@@ -161,7 +224,7 @@ final class LicenseSection
     {
         wp_safe_redirect(add_query_arg(array_filter([
             'page' => FeedsPage::SLUG,
-            'tab' => 'license',
+            'tab' => self::TAB,
             'freshet_feeds_notice' => $notice,
             'freshet_feeds_message' => $message !== '' ? rawurlencode($message) : null,
         ]), admin_url('admin.php')));
