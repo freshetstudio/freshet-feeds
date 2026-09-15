@@ -14,12 +14,7 @@ use FreshetFeeds\Feed\FeedRepository;
 use FreshetFeeds\Fetch\Cron;
 use FreshetFeeds\Fetch\FeedRunner;
 use FreshetFeeds\Fetch\FetchLock;
-use FreshetFeeds\Admin\LicenseSection;
 use FreshetFeeds\Item\ItemCollection;
-use FreshetFeeds\License\LicenseClient;
-use FreshetFeeds\License\LicenseInterface;
-use FreshetFeeds\License\RemoteLicense;
-use FreshetFeeds\License\UpdateChecker;
 use FreshetFeeds\Provider\Mock\FixtureNormalizer;
 use FreshetFeeds\Provider\MockProvider;
 use FreshetFeeds\Provider\ProviderRegistry;
@@ -30,7 +25,6 @@ final class Plugin
 {
     private static ?self $instance = null;
 
-    private LicenseInterface $license;
     private FeedRepository $feeds;
     private ProviderRegistry $providers;
     private ItemCache $cache;
@@ -50,23 +44,6 @@ final class Plugin
 
     private function __construct()
     {
-        // The wordpress.org build ships without the remote-license stack
-        // (Guideline 5: no locked features) — feeds are unlimited in BOTH
-        // builds. What a validating key buys (direct-sold builds only) is the
-        // managed source pipeline: canUseProxy() gates that entitlement.
-        $hasLicenseStack = is_readable(FRESHET_FEEDS_DIR . 'src/License/RemoteLicense.php');
-        $licenseClient = $hasLicenseStack ? new LicenseClient() : null;
-
-        /**
-         * Filter the active license implementation.
-         *
-         * @param LicenseInterface $license
-         */
-        $this->license = apply_filters(
-            'freshet_feeds_license',
-            $hasLicenseStack ? new RemoteLicense($licenseClient) : new \FreshetFeeds\License\UnlimitedLicense()
-        );
-
         $this->feeds = new FeedRepository();
         $this->cache = new ItemCache();
         $this->providers = new ProviderRegistry();
@@ -90,18 +67,16 @@ final class Plugin
 
         add_action('rest_api_init', fn () => (new FeedsController($this->feeds))->registerRoutes());
 
-        $licenseSection = $licenseClient !== null ? new LicenseSection($licenseClient, $this->license) : null;
-
         $this->cron->hooks();
-        (new FeedsPage($this->feeds, $this->providers, $this->cache, $this->runner, $this->license, $licenseSection))->hooks();
-        $licenseSection?->hooks();
+        (new FeedsPage($this->feeds, $this->providers, $this->cache, $this->runner))->hooks();
 
-        // Absent from the wordpress.org build (updates come from the directory);
-        // present in direct-sold builds where it is opt-in via constant/filter.
-        // File check (not class_exists): the optimized classmap in release
-        // builds would emit a warning autoloading a stripped file.
-        if ($licenseClient !== null && is_readable(FRESHET_FEEDS_DIR . 'src/License/UpdateChecker.php')) {
-            (new UpdateChecker($licenseClient))->hooks();
+        // Anything a build carries beyond the above boots from one class. A
+        // build without it — the wordpress.org one, where the file is not
+        // there — has nothing to boot: the release build regenerates the
+        // classmap after the strip, so the autoloader answers nothing, this is
+        // one class_exists(), and everything above is whole as it stands.
+        if (class_exists(Extension\Bootstrap::class)) {
+            Extension\Bootstrap::boot();
         }
 
         if (defined('WP_CLI') && WP_CLI) {
@@ -223,10 +198,5 @@ final class Plugin
     public function feedRunner(): FeedRunner
     {
         return $this->runner;
-    }
-
-    public function license(): LicenseInterface
-    {
-        return $this->license;
     }
 }

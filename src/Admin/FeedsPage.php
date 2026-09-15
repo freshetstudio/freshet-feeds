@@ -8,7 +8,6 @@ use FreshetFeeds\Cache\ItemCache;
 use FreshetFeeds\Feed\Feed;
 use FreshetFeeds\Feed\FeedRepository;
 use FreshetFeeds\Fetch\FeedRunner;
-use FreshetFeeds\License\LicenseInterface;
 use FreshetFeeds\Provider\MockProvider;
 use FreshetFeeds\Provider\ProviderRegistry;
 use Throwable;
@@ -16,6 +15,13 @@ use Throwable;
 /**
  * The single admin screen: feed list and feed add/edit form.
  * Plain WP admin markup — no build step, no React.
+ *
+ * The screen is extended through hooks rather than through anything it holds:
+ * `freshet_feeds_tabs` adds a tab to the strip,
+ * `freshet_feeds_render_tab` renders one this class does not own, and
+ * `freshet_feeds_header_meta` prints into the header's meta strip, before the
+ * Docs link. Styles for what a hook prints go on the `freshet-feeds-admin`
+ * handle after enqueueAdminStyle() has registered it.
  */
 final class FeedsPage
 {
@@ -27,8 +33,6 @@ final class FeedsPage
         private readonly ProviderRegistry $providers,
         private readonly ItemCache $cache,
         private readonly FeedRunner $runner,
-        private readonly LicenseInterface $license,
-        private readonly ?LicenseSection $licenseSection = null,
     ) {
     }
 
@@ -165,9 +169,7 @@ final class FeedsPage
 
         echo '<div class="wrap" style="margin-top:1.5em;">';
 
-        if ($tab === 'license') {
-            $this->licenseSection?->render();
-        } else {
+        if ($tab === 'feeds') {
             $editId = (int) ($_GET['edit'] ?? 0);
             $editFeed = $editId > 0 ? $this->feeds->find($editId) : null;
 
@@ -176,17 +178,45 @@ final class FeedsPage
             } else {
                 $this->renderFeedList();
             }
+        } else {
+            /**
+             * Renders a tab registered through `freshet_feeds_tabs`.
+             * currentTab() has already checked the slug is a registered one.
+             *
+             * @param string    $tab  The tab's slug.
+             * @param FeedsPage $page The screen.
+             */
+            do_action('freshet_feeds_render_tab', $tab, $this);
         }
 
         echo '</div>';
     }
 
+    /**
+     * The strip: the Feeds tab first, then whatever a build adds.
+     *
+     * @return array<string, string> slug => label
+     */
+    private function tabs(): array
+    {
+        $tabs = [
+            'feeds' => __('Feeds', 'freshet-feeds'),
+        ];
+
+        /**
+         * Filter the tabs on the Feeds screen.
+         *
+         * @param array<string, string> $tabs slug => label
+         */
+        return apply_filters('freshet_feeds_tabs', $tabs);
+    }
+
+    /** One query arg, an allow-list, and the feed list as the default. */
     private function currentTab(): string
     {
         $tab = sanitize_key(wp_unslash($_GET['tab'] ?? ''));
-        $tabs = $this->licenseSection !== null ? ['license'] : [];
 
-        return in_array($tab, $tabs, true) ? $tab : 'feeds';
+        return $tab !== 'feeds' && isset($this->tabs()[$tab]) ? $tab : 'feeds';
     }
 
     /**
@@ -210,22 +240,13 @@ final class FeedsPage
             .frst-header__title { font-size: 16px; font-weight: 600; color: #1d2327; margin: 0; padding: 0; }
             .frst-header__version { font-size: 11px; color: #646970; background: #f0f0f1; border-radius: 10px; padding: 2px 8px; }
             .frst-header__meta { margin-left: auto; display: flex; align-items: center; gap: 14px; font-size: 13px; }
-            .frst-header__pill { border-radius: 12px; padding: 3px 10px; font-weight: 600; font-size: 12px; }
-            .frst-header__pill--pro { background: #edfaef; color: #00832a; }
-            .frst-header__pill--free { background: #f0f0f1; color: #50575e; }
             .frst-header .nav-tab-wrapper { border-bottom: 0; padding: 0; margin: 0; }
         ');
     }
 
     private function renderHeader(string $activeTab): void
     {
-        $tabs = [
-            'feeds' => __('Feeds', 'freshet-feeds'),
-        ];
-
-        if ($this->licenseSection !== null) {
-            $tabs['license'] = __('License', 'freshet-feeds');
-        }
+        $tabs = $this->tabs();
 
         ?>
         <div class="frst-header">
@@ -239,14 +260,12 @@ final class FeedsPage
                 <h1 class="frst-header__title"><?php esc_html_e('Freshet Feeds', 'freshet-feeds'); ?></h1>
                 <span class="frst-header__version"><?php echo esc_html('v' . FRESHET_FEEDS_VERSION); ?></span>
                 <div class="frst-header__meta">
-                    <?php if ($this->licenseSection !== null) : ?>
-                        <?php if ($this->license->isPro()) : ?>
-                            <span class="frst-header__pill frst-header__pill--pro"><?php esc_html_e('Pro', 'freshet-feeds'); ?></span>
-                        <?php else : ?>
-                            <span class="frst-header__pill frst-header__pill--free"><?php esc_html_e('Free', 'freshet-feeds'); ?></span>
-                            <a href="https://freshet.studio" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Upgrade', 'freshet-feeds'); ?></a>
-                        <?php endif; ?>
-                    <?php endif; ?>
+                    <?php
+                    /**
+                     * Fires inside the header's meta strip, before the Docs link.
+                     */
+                    do_action('freshet_feeds_header_meta');
+                    ?>
                     <a href="https://freshet.studio/docs" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Docs', 'freshet-feeds'); ?></a>
                     <a href="mailto:email@freshet.studio"><?php esc_html_e('Support', 'freshet-feeds'); ?></a>
                 </div>

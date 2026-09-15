@@ -36,7 +36,7 @@ Every provider — RSS/Atom, YouTube channels, Bluesky profiles — normalizes i
 * **Bluesky (profile)** — public API, no authentication.
 * **Mock (fixture data)** — bundled sample posts, no credentials and no network calls, for building and styling templates before a live connection exists. Hidden and blocked in `production`.
 
-The plugin is fully functional with unlimited feeds. A separately distributed version with a managed source pipeline and direct support is available from [freshet.studio](https://freshet.studio). Full developer documentation: [freshet.studio/docs](https://freshet.studio/docs).
+The plugin is fully functional with unlimited feeds. Full developer documentation: [freshet.studio/docs](https://freshet.studio/docs).
 
 == External services ==
 

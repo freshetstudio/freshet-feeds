@@ -10,8 +10,8 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
     exit;
 }
 
-// OAuth secrets, license key, and cron events are ALWAYS removed on uninstall —
-// orphaned tokens are a liability regardless of the content-removal preference.
+// OAuth secrets and cron events are ALWAYS removed on uninstall — orphaned
+// tokens are a liability regardless of the content-removal preference.
 $freshet_feeds_connections = get_option('freshet_feeds_connections', []);
 
 if (is_array($freshet_feeds_connections)) {
@@ -23,10 +23,18 @@ if (is_array($freshet_feeds_connections)) {
 }
 
 delete_option('freshet_feeds_connections');
-delete_option('freshet_feeds_license_key');
-delete_option('freshet_feeds_license_last_ok');
 wp_unschedule_hook('freshet_feeds_refresh');
 wp_unschedule_hook('freshet_feeds_refresh_feed');
+
+// Whatever a build carries beyond the core plugin keeps options of its own
+// and removes them itself. Nothing loads the plugin's autoloader at uninstall,
+// so its entry point is read directly — and only where the file is there.
+$freshet_feeds_extension = __DIR__ . '/src/Extension/Bootstrap.php';
+
+if (is_readable($freshet_feeds_extension)) {
+    require_once $freshet_feeds_extension;
+    FreshetFeeds\Extension\Bootstrap::uninstall();
+}
 
 // Content (feeds + cached items + localized images) only goes when opted in.
 if (!get_option('freshet_feeds_delete_data_on_uninstall')) {
