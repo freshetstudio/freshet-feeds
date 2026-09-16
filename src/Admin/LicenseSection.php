@@ -31,7 +31,6 @@ final class LicenseSection
     {
         add_action('admin_post_freshet_feeds_activate_license', [$this, 'activate']);
         add_action('admin_post_freshet_feeds_deactivate_license', [$this, 'deactivate']);
-        add_action('admin_post_freshet_feeds_save_data_settings', [$this, 'saveDataSettings']);
         add_filter('freshet_feeds_tabs', [$this, 'addTab']);
         add_action('freshet_feeds_render_tab', [$this, 'renderTab']);
         add_action('freshet_feeds_header_meta', [$this, 'renderPill']);
@@ -88,15 +87,6 @@ final class LicenseSection
             .frst-header__pill--pro { background: #edfaef; color: #00832a; }
             .frst-header__pill--free { background: #f0f0f1; color: #50575e; }
         ');
-    }
-
-    public function saveDataSettings(): void
-    {
-        $this->authorize('freshet_feeds_save_data_settings');
-
-        update_option('freshet_feeds_delete_data_on_uninstall', isset($_POST['delete_data']) ? 1 : 0, false);
-
-        $this->back('saved');
     }
 
     public function activate(): void
@@ -167,8 +157,6 @@ final class LicenseSection
                 esc_html__('Deactivate license on this site', 'freshet-feeds')
             );
 
-            $this->renderDataSettings();
-
             return;
         }
 
@@ -188,26 +176,6 @@ final class LicenseSection
             esc_attr__('License key', 'freshet-feeds')
         );
         printf('<button type="submit" class="button button-primary">%s</button></p>', esc_html__('Activate', 'freshet-feeds'));
-        echo '</form>';
-
-        $this->renderDataSettings();
-    }
-
-    /** Rendered by render() after the license block. */
-    private function renderDataSettings(): void
-    {
-        echo '<hr style="margin:2em 0;">';
-        echo '<h2>' . esc_html__('Data', 'freshet-feeds') . '</h2>';
-        echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
-        wp_nonce_field('freshet_feeds_save_data_settings');
-        echo '<input type="hidden" name="action" value="freshet_feeds_save_data_settings">';
-        printf(
-            '<label><input type="checkbox" name="delete_data" value="1"%s> %s</label>',
-            checked((bool) get_option('freshet_feeds_delete_data_on_uninstall'), true, false),
-            esc_html__('Remove all feeds, cached items, and localized images when the plugin is uninstalled.', 'freshet-feeds')
-        );
-        echo '<p class="description">' . esc_html__('Connection secrets and license data are always removed on uninstall, regardless of this setting.', 'freshet-feeds') . '</p>';
-        submit_button(__('Save', 'freshet-feeds'), 'secondary');
         echo '</form>';
     }
 
