@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FreshetFeeds;
 
 use FreshetFeeds\Admin\FeedsPage;
+use FreshetFeeds\Admin\SettingsSection;
 use FreshetFeeds\Blocks\FeedBlock;
 use FreshetFeeds\Cache\ImageStore;
 use FreshetFeeds\Cache\ItemCache;
@@ -57,6 +58,7 @@ final class Plugin
 
         $this->cron->hooks();
         (new FeedsPage($this->feeds, $this->providers, $this->cache, $this->runner))->hooks();
+        (new SettingsSection())->hooks();
 
         // Anything a build carries beyond the above boots from one class. A
         // build without it — the wordpress.org one, where the file is not
