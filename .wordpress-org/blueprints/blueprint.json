@@ -1,0 +1,53 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "description": "Freshet Feeds on a small site: one feed on the bundled Mock provider, cached and rendered on the front page through the Feed block in its grid and list layouts, landing on that page.",
+  "landingPage": "/",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "steps": [
+    {
+      "step": "login",
+      "username": "admin"
+    },
+    {
+      "step": "defineWpConfigConsts",
+      "consts": {
+        "WP_ENVIRONMENT_TYPE": "local"
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "freshet-feeds"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "weight": 1,
+        "caption": "Installing Freshet Feeds"
+      }
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "Northwind Roastery",
+        "blogdescription": "Small-batch coffee, and a feed of what we are up to"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\n/**\n * Freshet Feeds - Playground preview fixture.\n *\n * A blank WordPress has no feeds and no page to put one on, so the front end\n * would show none of what this plugin does. This seeds one feed on the bundled\n * Mock provider (fixture posts, no credentials, no remote API), warms its cache,\n * and puts the Feed block on a page in both layouts, so the preview lands on a\n * rendered feed rather than on wp-admin.\n */\nrequire_once 'wordpress/wp-load.php';\n\nuse FreshetFeeds\\Feed\\Feed;\nuse FreshetFeeds\\Plugin;\n\nglobal $wp_rewrite;\n\n// The page is reached by name, and item permalinks read better with pretty URLs.\n$wp_rewrite->set_permalink_structure('/%postname%/');\n$wp_rewrite->flush_rules(false);\n\n$plugin = Plugin::instance();\n$feeds  = $plugin->feeds();\n\n// One feed on the Mock provider. WP_ENVIRONMENT_TYPE is set to \"local\" by the\n// step before this one: the provider refuses to fetch on a production site, and\n// a Playground that does not say otherwise reports production.\n$feed = $feeds->findBySlug('roastery-news') ?? $feeds->save(new Feed(\n    id: 0,\n    name: 'Roastery news',\n    slug: 'roastery-news',\n    providerId: 'mock',\n    settings: [],\n    count: 6,\n    ttl: HOUR_IN_SECONDS,\n    defaultLayout: 'grid',\n));\n\n// Warm the cache now, so the landing page serves items instead of fetching\n// them on its first view. Image localisation runs here too; where a download\n// does not complete the item keeps its remote image URL and still renders.\n$plugin->items($feed->slug);\n\n$content = implode(\"\\n\", [\n    '<!-- wp:heading --><h2 class=\"wp-block-heading\">Latest from the roastery</h2><!-- /wp:heading -->',\n    '<!-- wp:paragraph --><p>The six most recent posts from the roastery&#8217;s feed, rendered on the server through the plugin&#8217;s own templates: no iframe, no script, real markup in the page. Every card below is the Feed block in its grid layout.</p><!-- /wp:paragraph -->',\n    sprintf('<!-- wp:freshet-feeds/feed {\"feedId\":%d,\"layout\":\"grid\",\"count\":6} /-->', $feed->id),\n    '<!-- wp:heading --><h2 class=\"wp-block-heading\">The same feed as a list</h2><!-- /wp:heading -->',\n    '<!-- wp:paragraph --><p>One feed, another layout: the block picks the layout, the plugin&#8217;s <code>layout-list.php</code> renders it, and a theme can override either file. The feed itself is set up once under Feeds in wp-admin.</p><!-- /wp:paragraph -->',\n    sprintf('<!-- wp:freshet-feeds/feed {\"feedId\":%d,\"layout\":\"list\",\"count\":3} /-->', $feed->id),\n]);\n\n$page_id = wp_insert_post([\n    'post_type'    => 'page',\n    'post_title'   => 'News',\n    'post_name'    => 'news',\n    'post_status'  => 'publish',\n    'post_content' => $content,\n], true);\n\n// Land on the feed, not on the blog index: the page is the front page.\nif (!is_wp_error($page_id)) {\n    update_option('show_on_front', 'page');\n    update_option('page_on_front', (int) $page_id);\n}\n",
+      "progress": {
+        "weight": 2,
+        "caption": "Seeding a feed and a page to show it on"
+      }
+    }
+  ]
+}
