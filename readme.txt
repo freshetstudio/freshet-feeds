@@ -1,6 +1,6 @@
 === Freshet Feeds ===
 Contributors: kristoffbertram
-Tags: feeds, youtube, rss, bluesky
+Tags: feed, rss, youtube, bluesky, social-feed
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
@@ -8,13 +8,15 @@ Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Developer-first external feeds — RSS/Atom, YouTube channels and Bluesky profiles — rendered with templates your theme owns.
+Display an RSS feed, a YouTube feed or a Bluesky feed in WordPress through templates your theme owns — no iframes, no third-party JavaScript.
 
 == Description ==
 
 Freshet Feeds displays external feeds inside WordPress the way developers wish every feed plugin worked: **your theme owns the markup**. No vendor styling panels, no iframes, no third-party JavaScript on your pages.
 
 Every provider — RSS/Atom, YouTube channels, Bluesky profiles — normalizes into one item model and renders through one template chain, overridable WooCommerce-style from your theme.
+
+Use it where you would otherwise reach for a feed embed: an RSS feed block on a page, a YouTube channel feed, a social media feed from a Bluesky or Mastodon profile in a block widget area, a podcast feed's episode list. Items are rendered as your own markup, not an embed, and nothing is imported as posts.
 
 **For developers**
 
@@ -81,6 +83,18 @@ Copy any template from the plugin's `templates/` folder into `{your-theme}/fresh
 = Does it slow my site down? =
 
 No. Feeds are fetched in the background and served from a local cache; pages never wait on a remote API (except the one-time first fetch of a newly created feed). Images are served from your own uploads directory.
+
+= How do I display an RSS feed on a page? =
+
+Go to **Feeds → Add feed**, pick the RSS / Atom provider and paste the feed URL. Then add the **Feed** block to the page — or to a block widget area such as a sidebar or footer — and pick the feed, a layout and an item count. In a theme template, `freshet_feeds_render( 'your-feed-slug' )` does the same. The items are rendered as HTML in your page from the plugin's templates or your theme's overrides; there is no iframe and no script from the source site.
+
+= Can it embed a YouTube channel feed without an API key? =
+
+Yes. The YouTube provider reads the public channel feed, so there is no API key and no quota; you enter the channel ID. The default item template shows each video as a thumbnail card that links to YouTube rather than embedding an iframe player, which keeps the page fast and keeps YouTube's scripts off it until the visitor clicks. If you want an inline player, copy `item-youtube.php` into your theme and change the markup.
+
+= Does it show a Bluesky or Mastodon feed? =
+
+Bluesky profiles are a provider of their own: enter the handle and the plugin reads the public API — no authentication. Reposts, replies and pins are left out, and embedded images keep their alt text. Mastodon has no dedicated provider because it does not need one: every Mastodon account exposes an RSS feed at `https://instance/@user.rss`, so use the RSS / Atom provider with that URL. The same goes for subreddits (append `/.rss`) and podcast feeds. Either way the posts render through your templates as a social media feed in your own markup, without the platform's embed script.
 
 == Screenshots ==
 
