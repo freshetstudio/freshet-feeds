@@ -98,7 +98,10 @@ Bluesky profiles are a provider of their own: enter the handle and the plugin re
 
 == Screenshots ==
 
-1. A feed rendered by your own theme — YouTube, RSS and Bluesky items normalized into one grid.
+1. An RSS feed rendered on the front end in the theme's own markup: thumbnails, dates, linked titles and excerpts in a grid, with no iframes and no vendor styling.
+2. The Feed block selected in the block editor, with its settings panel choosing the feed, the layout and the number of items; themes can add custom layouts via `freshet-feeds/layout-{name}.php`.
+3. The Feeds list in wp-admin, showing each feed's name, slug, provider, last fetch time and status, with the hint for rendering it in theme code or with the Feed block.
+4. The edit screen for a feed: name, slug, provider, item count, and the field each provider needs, a feed URL for RSS / Atom, a channel ID for YouTube or a handle for Bluesky.
 
 == Changelog ==
 
