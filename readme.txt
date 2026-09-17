@@ -4,7 +4,7 @@ Tags: feed, rss, youtube, bluesky, social-feed
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,12 @@ Bluesky profiles are a provider of their own: enter the handle and the plugin re
 4. The edit screen for a feed: name, slug, provider, item count, and the field each provider needs, a feed URL for RSS / Atom, a channel ID for YouTube or a handle for Bluesky.
 
 == Changelog ==
+
+= 1.0.2 =
+* New **Settings** tab on the Feeds screen with an opt-in to remove all plugin data (feeds, cached items and stored images) when the plugin is uninstalled.
+* The wordpress.org package is trimmed to the runtime files it needs.
+* Dropped the `Domain Path` header and the manual text-domain load; wordpress.org language packs load on their own.
+* Listing: real screenshots, a live preview in WordPress Playground, and a readme written in the words people search for.
 
 = 1.0.1 =
 * First release published on WordPress.org.
