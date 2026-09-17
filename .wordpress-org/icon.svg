@@ -1,8 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Freshet Feeds">
-  <rect width="256" height="256" rx="52" fill="#0A1499"/>
-  <g transform="translate(56,56) scale(6.0)" fill="none" stroke="#ffffff" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 11a9 9 0 0 1 9 9"/>
-    <path d="M4 4a16 16 0 0 1 16 16"/>
-    <circle cx="5" cy="19" r="1.5" fill="#ffffff" stroke="none"/>
-  </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>feeds/icon</title>
+    <defs>
+        <path d="M0,0 L640,0 L640,640 L0,640 Z" id="path-1"></path>
+    </defs>
+    <g id="feeds/icon" stroke="none" fill="none" xlink:href="#path-1" fill-rule="evenodd">
+        <use fill="#FFFFFF" xlink:href="#path-1"></use>
+        <rect id="Rectangle-2" fill="#1122FF" x="0" y="0" width="640" height="640" rx="120"></rect>
+        <path d="M140,260 C296.568542,260 380,343.431458 380,500 L320,500 C320,376.568542 263.431458,320 140,320 L140,260 Z M140,140 C377.214923,140 501,263.411104 501,500 L441,500 C441,296.588896 344.11841,200 140,200 L140,140 Z M200,400 C222.09139,400 240,417.90861 240,440 C240,462.09139 222.09139,480 200,480 C177.90861,480 160,462.09139 160,440 C160,417.90861 177.90861,400 200,400 Z" id="Shape" fill="#FFFFFF"></path>
+    </g>
 </svg>
