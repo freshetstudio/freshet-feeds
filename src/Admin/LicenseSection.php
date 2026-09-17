@@ -93,7 +93,7 @@ final class LicenseSection
     {
         $this->authorize('freshet_feeds_activate_license');
 
-        $key = sanitize_text_field(wp_unslash($_POST['license_key'] ?? ''));
+        $key = $this->normalizeKey(sanitize_text_field(wp_unslash($_POST['license_key'] ?? '')));
 
         if ($key === '') {
             $this->back('error', __('Enter a license key.', 'freshet-feeds'));
@@ -102,7 +102,7 @@ final class LicenseSection
         $response = $this->client->activate($key, home_url());
 
         if (!($response['success'] ?? false)) {
-            $this->back('error', (string) ($response['error'] ?? __('Activation failed.', 'freshet-feeds')));
+            $this->back('error', $this->failureMessage($response));
         }
 
         update_option(RemoteLicense::OPTION_KEY, $key, false);
@@ -177,6 +177,43 @@ final class LicenseSection
         );
         printf('<button type="submit" class="button button-primary">%s</button></p>', esc_html__('Activate', 'freshet-feeds'));
         echo '</form>';
+    }
+
+    /**
+     * What to tell the customer when the key was not stored. The server's own
+     * sentence says it best and is passed through as written; an unknown key
+     * gets the one thing the server cannot know — the paste has already been
+     * cleaned (normalizeKey), so re-pasting it will not change the answer.
+     *
+     * @param array{success?: bool, error?: string, error_code?: string} $response
+     */
+    private function failureMessage(array $response): string
+    {
+        $detail = trim((string) ($response['error'] ?? ''));
+
+        return match ((string) ($response['error_code'] ?? '')) {
+            'invalid_key' => trim(sprintf(
+                /* translators: %s: the license server's own sentence about the key */
+                __('%s Spaces and invisible characters were already stripped before sending, so pasting it again will not help — compare it character by character.', 'freshet-feeds'),
+                $detail
+            )),
+            default => $detail !== '' ? $detail : __('Activation failed.', 'freshet-feeds'),
+        };
+    }
+
+    /**
+     * A key pasted out of an email routinely arrives wrapped in a non-breaking
+     * space or a zero-width character, neither of which sanitize_text_field()
+     * removes — and the server then correctly answers "unknown key" about a
+     * key that was copied correctly. Drop what is invisible and change nothing
+     * else: which characters a key may contain is the server's business.
+     * Same as Unused Media's.
+     */
+    private function normalizeKey(string $key): string
+    {
+        $stripped = preg_replace('/[\s\x{00A0}\x{00AD}\x{180E}\x{200B}-\x{200F}\x{2060}\x{FEFF}]/u', '', $key);
+
+        return is_string($stripped) ? $stripped : trim($key);
     }
 
     private function authorize(string $nonceAction): void
