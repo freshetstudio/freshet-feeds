@@ -1,0 +1,57 @@
+/**
+ * Structural CSS only — deliberately unopinionated so theme styles win.
+ * Column count is a custom property themes can override:
+ *   .freshet-feeds__grid { --freshet-feeds-columns: 3; }
+ */
+
+.freshet-feeds__grid {
+	display: grid;
+	grid-template-columns: repeat( var( --freshet-feeds-columns, 2 ), 1fr );
+	gap: var( --freshet-feeds-gap, 1.5rem );
+
+	@media ( max-width: 640px ) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.freshet-feeds__list {
+	display: flex;
+	flex-direction: column;
+	gap: var( --freshet-feeds-gap, 1.5rem );
+
+	.freshet-feeds__item {
+		display: flex;
+		gap: 1rem;
+		align-items: flex-start;
+	}
+
+	.freshet-feeds__item-media {
+		flex: 0 0 30%;
+	}
+}
+
+.freshet-feeds__item-image {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+/* Video cards (item-youtube.php): play affordance over the thumbnail. */
+.freshet-feeds__item-media--video {
+	position: relative;
+	display: block;
+}
+
+.freshet-feeds__item-play {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0.9;
+	transition: opacity 0.15s ease;
+
+	.freshet-feeds__item-media--video:hover & {
+		opacity: 1;
+	}
+}
