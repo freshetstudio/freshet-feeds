@@ -38,7 +38,14 @@ final class RssProvider implements ProviderInterface
             throw new FetchException(esc_html__('Feed URL is missing or invalid.', 'freshet-feeds'));
         }
 
-        $response = wp_remote_get($url, [
+        // The safe HTTP API refuses private and loopback addresses and odd
+        // ports, on the first request and on every redirect the feed host
+        // answers with. Checked up front too, so the refusal reads as a reason.
+        if (!wp_http_validate_url($url)) {
+            throw new FetchException(esc_html__('This feed address is on a private network or an unusual port, and feeds are only fetched from the public web. Use the address the feed publishes publicly.', 'freshet-feeds'));
+        }
+
+        $response = wp_safe_remote_get($url, [
             'timeout' => 15,
             'limit_response_size' => 2 * MB_IN_BYTES,
             'user-agent' => 'FreshetFeeds/' . FRESHET_FEEDS_VERSION . '; ' . home_url(),

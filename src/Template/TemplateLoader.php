@@ -21,7 +21,8 @@ final class TemplateLoader
     /** Absolute path of the winning template file, or null if the name is unknown everywhere. */
     public function locate(string $name): ?string
     {
-        $name = str_replace(['..', "\0"], '', $name);
+        // NUL first: stripped second, ".\0." would come out as "..".
+        $name = str_replace(["\0", '..'], '', $name);
         $file = $name . '.php';
 
         /**
@@ -100,7 +101,7 @@ final class TemplateLoader
 
         if ($template === null) {
             if (defined('WP_DEBUG') && WP_DEBUG) {
-                trigger_error(
+                trigger_error( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error -- WP_DEBUG-only notice for a missing template.
                     sprintf('Freshet Feeds: template "%s" not found.', esc_html($name)),
                     E_USER_NOTICE
                 );

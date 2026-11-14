@@ -58,7 +58,7 @@ final class MockProvider implements ProviderInterface
             throw new FetchException(esc_html(sprintf('Fixture not readable: %s', $this->fixturePath)));
         }
 
-        $data = json_decode((string) file_get_contents($this->fixturePath), true);
+        $data = json_decode((string) file_get_contents($this->fixturePath), true); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- the bundled fixture, a local file.
 
         if (!is_array($data) || !is_array($data['elements'] ?? null)) {
             throw new FetchException(esc_html('Fixture is not a valid mock posts payload.'));

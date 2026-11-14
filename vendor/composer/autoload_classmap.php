@@ -9,6 +9,8 @@ return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'FreshetFeeds\\Admin\\FeedsPage' => $baseDir . '/src/Admin/FeedsPage.php',
     'FreshetFeeds\\Admin\\MenuIcon' => $baseDir . '/src/Admin/MenuIcon.php',
+    'FreshetFeeds\\Admin\\NoticeMessage' => $baseDir . '/src/Admin/NoticeMessage.php',
+    'FreshetFeeds\\Admin\\OwnScreenNotices' => $baseDir . '/src/Admin/OwnScreenNotices.php',
     'FreshetFeeds\\Admin\\SettingsSection' => $baseDir . '/src/Admin/SettingsSection.php',
     'FreshetFeeds\\Blocks\\FeedBlock' => $baseDir . '/src/Blocks/FeedBlock.php',
     'FreshetFeeds\\Cache\\ImageStore' => $baseDir . '/src/Cache/ImageStore.php',

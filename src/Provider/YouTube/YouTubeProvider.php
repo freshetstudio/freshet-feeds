@@ -46,7 +46,7 @@ final class YouTubeProvider implements ProviderInterface
                 : ['channel_id' => $channelId]
         );
 
-        $response = wp_remote_get($url, ['timeout' => 15, 'limit_response_size' => 2 * MB_IN_BYTES]);
+        $response = wp_safe_remote_get($url, ['timeout' => 15, 'limit_response_size' => 2 * MB_IN_BYTES]);
 
         if (is_wp_error($response)) {
             throw new FetchException(esc_html($response->get_error_message()));

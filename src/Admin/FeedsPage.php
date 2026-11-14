@@ -68,13 +68,14 @@ final class FeedsPage
 
     public function renderNotice(): void
     {
-        $type = sanitize_key(wp_unslash($_GET['freshet_feeds_notice'] ?? ''));
+        $type = sanitize_key(wp_unslash($_GET['freshet_feeds_notice'] ?? '')); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display-only read behind manage_options; sanitize_key.
 
         if ($type === '' || !current_user_can(self::CAP)) {
             return;
         }
 
-        $message = sanitize_text_field(rawurldecode(wp_unslash($_GET['freshet_feeds_message'] ?? ''))); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Recommended -- sanitized after decode; display-only notice.
+        // The URL carries a token, never the sentence: see NoticeMessage.
+        $message = NoticeMessage::take(sanitize_key(wp_unslash($_GET[NoticeMessage::ARG] ?? ''))); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- token lookup scoped to the current user; display-only.
 
         [$class, $text] = match ($type) {
             'saved' => ['notice-success', __('Saved.', 'freshet-feeds')],
@@ -83,7 +84,7 @@ final class FeedsPage
             default => ['notice-error', $message !== '' ? $message : __('Something went wrong.', 'freshet-feeds')],
         };
 
-        printf('<div class="notice %s is-dismissible"><p>%s</p></div>', esc_attr($class), esc_html($text));
+        printf('<div class="notice %s is-dismissible frst-notice"><p>%s</p></div>', esc_attr($class), esc_html($text));
     }
 
     // ---------------------------------------------------------------- actions
@@ -92,6 +93,7 @@ final class FeedsPage
     {
         $this->authorize('freshet_feeds_save_feed');
 
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce and capability checked in authorize().
         $id = (int) ($_POST['feed_id'] ?? 0); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput, WordPress.Security.NonceVerification.Missing -- int cast sanitizes; nonce verified in authorize().
         // No fallback provider: a typo or a deregistered provider must not
         // quietly become some other provider's data.
@@ -119,10 +121,12 @@ final class FeedsPage
             slug: sanitize_title(wp_unslash($_POST['slug'] ?? '')),
             providerId: $providerId,
             settings: $settings,
-            count: min(50, max(1, (int) ($_POST['count'] ?? Feed::DEFAULT_COUNT))),
-            ttl: min(WEEK_IN_SECONDS, max(5 * MINUTE_IN_SECONDS, (int) ($_POST['ttl'] ?? Feed::DEFAULT_TTL))),
+            count: min(50, max(1, (int) ($_POST['count'] ?? Feed::DEFAULT_COUNT))), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- int cast and clamp sanitize.
+            ttl: min(WEEK_IN_SECONDS, max(5 * MINUTE_IN_SECONDS, (int) ($_POST['ttl'] ?? Feed::DEFAULT_TTL))), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- int cast and clamp sanitize.
             defaultLayout: sanitize_key(wp_unslash($_POST['layout'] ?? 'grid')),
         );
+
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
 
         try {
             $saved = $this->feeds->save($feed);
@@ -137,7 +141,7 @@ final class FeedsPage
     {
         $this->authorize('freshet_feeds_delete_feed');
 
-        $id = (int) ($_GET['feed'] ?? 0);
+        $id = (int) ($_GET['feed'] ?? 0); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput, WordPress.Security.NonceVerification.Recommended -- int cast sanitizes; nonce and capability checked in authorize().
         (new \FreshetFeeds\Cache\ImageStore())->deleteForFeed($id);
         $this->feeds->delete($id);
         $this->back('deleted');
@@ -147,7 +151,7 @@ final class FeedsPage
     {
         $this->authorize('freshet_feeds_refresh_feed');
 
-        $feed = $this->feeds->find((int) ($_GET['feed'] ?? 0));
+        $feed = $this->feeds->find((int) ($_GET['feed'] ?? 0)); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput, WordPress.Security.NonceVerification.Recommended -- int cast sanitizes; nonce and capability checked in authorize().
 
         if ($feed === null) {
             $this->back('error', __('Unknown feed.', 'freshet-feeds'));
@@ -177,10 +181,10 @@ final class FeedsPage
         echo '<div class="wrap" style="margin-top:1.5em;">';
 
         if ($tab === 'feeds') {
-            $editId = (int) ($_GET['edit'] ?? 0);
+            $editId = (int) ($_GET['edit'] ?? 0); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput, WordPress.Security.NonceVerification.Recommended -- int cast sanitizes; display-only read behind manage_options.
             $editFeed = $editId > 0 ? $this->feeds->find($editId) : null;
 
-            if (isset($_GET['add']) || $editFeed !== null) {
+            if (isset($_GET['add']) || $editFeed !== null) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display-only read behind manage_options.
                 $this->renderFeedForm($editFeed);
             } else {
                 $this->renderFeedList();
@@ -221,7 +225,7 @@ final class FeedsPage
     /** One query arg, an allow-list, and the feed list as the default. */
     private function currentTab(): string
     {
-        $tab = sanitize_key(wp_unslash($_GET['tab'] ?? ''));
+        $tab = sanitize_key(wp_unslash($_GET['tab'] ?? '')); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display-only read behind manage_options; allow-listed below.
 
         return $tab !== 'feeds' && isset($this->tabs()[$tab]) ? $tab : 'feeds';
     }
@@ -477,7 +481,7 @@ final class FeedsPage
             'page' => self::SLUG,
             'tab' => $tab !== '' ? $tab : null,
             'freshet_feeds_notice' => $notice,
-            'freshet_feeds_message' => $message !== '' ? rawurlencode($message) : null,
+            NoticeMessage::ARG => $message !== '' ? NoticeMessage::stash($message) : null,
         ]), admin_url('admin.php')));
 
         exit;

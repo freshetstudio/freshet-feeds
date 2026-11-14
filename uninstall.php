@@ -61,10 +61,10 @@ $freshet_feeds_dir = trailingslashit($freshet_feeds_upload['basedir']) . 'freshe
 
 if (is_dir($freshet_feeds_dir)) {
     foreach (glob($freshet_feeds_dir . '/*/*') ?: [] as $freshet_feeds_file) {
-        @unlink($freshet_feeds_file); // phpcs:ignore WordPress.WP.AlternativeFunctions -- uninstall cleanup of our own uploads/freshet-feeds dir.
+        @unlink($freshet_feeds_file); // phpcs:ignore WordPress.WP.AlternativeFunctions, WordPress.PHP.NoSilencedErrors -- best-effort uninstall cleanup of our own uploads/freshet-feeds dir.
     }
     foreach (glob($freshet_feeds_dir . '/*', GLOB_ONLYDIR) ?: [] as $freshet_feeds_subdir) {
-        @rmdir($freshet_feeds_subdir); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        @rmdir($freshet_feeds_subdir); // phpcs:ignore WordPress.WP.AlternativeFunctions, WordPress.PHP.NoSilencedErrors -- best-effort uninstall cleanup.
     }
-    @rmdir($freshet_feeds_dir); // phpcs:ignore WordPress.WP.AlternativeFunctions
+    @rmdir($freshet_feeds_dir); // phpcs:ignore WordPress.WP.AlternativeFunctions, WordPress.PHP.NoSilencedErrors -- best-effort uninstall cleanup.
 }

@@ -116,7 +116,7 @@ final class ImageStore
 
         $filename = $hash . '.' . $ext;
 
-        return file_put_contents($dir . '/' . $filename, $body) !== false ? $filename : null; // phpcs:ignore PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite -- $dir is inside wp_upload_dir(), never the plugin folder.
+        return file_put_contents($dir . '/' . $filename, $body) !== false ? $filename : null; // phpcs:ignore PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite,WordPress.WP.AlternativeFunctions -- validated image bytes under a hashed name in wp_upload_dir(), never the plugin folder; runs from cron, where WP_Filesystem may want credentials.
     }
 
     /** @param list<string> $keep */
@@ -128,7 +128,7 @@ final class ImageStore
 
         foreach (scandir($dir) ?: [] as $file) {
             if ($file[0] !== '.' && !in_array($file, $keep, true)) {
-                @unlink($dir . '/' . $file); // phpcs:ignore PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite,WordPress.WP.AlternativeFunctions -- pruning our own files in wp_upload_dir().
+                @unlink($dir . '/' . $file); // phpcs:ignore PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite,WordPress.WP.AlternativeFunctions,WordPress.PHP.NoSilencedErrors -- best-effort pruning of our own files in wp_upload_dir().
             }
         }
     }
@@ -155,10 +155,10 @@ final class ImageStore
 
         foreach (scandir($dir) ?: [] as $file) {
             if ($file[0] !== '.') {
-                @unlink($dir . '/' . $file); // phpcs:ignore PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite,WordPress.WP.AlternativeFunctions -- pruning our own files in wp_upload_dir().
+                @unlink($dir . '/' . $file); // phpcs:ignore PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite,WordPress.WP.AlternativeFunctions,WordPress.PHP.NoSilencedErrors -- best-effort pruning of our own files in wp_upload_dir().
             }
         }
 
-        @rmdir($dir); // phpcs:ignore PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite,WordPress.WP.AlternativeFunctions -- removing our own dir in wp_upload_dir().
+        @rmdir($dir); // phpcs:ignore PluginCheck.CodeAnalysis.WriteFile.PluginDirectoryWrite,WordPress.WP.AlternativeFunctions,WordPress.PHP.NoSilencedErrors -- best-effort removal of our own dir in wp_upload_dir().
     }
 }

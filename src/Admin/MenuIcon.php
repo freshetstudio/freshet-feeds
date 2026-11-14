@@ -43,6 +43,6 @@ final class MenuIcon
      */
     public static function dataUri(): string
     {
-        return 'data:image/svg+xml;base64,' . base64_encode(self::SVG);
+        return 'data:image/svg+xml;base64,' . base64_encode(self::SVG); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- data: URI for add_menu_page().
     }
 }

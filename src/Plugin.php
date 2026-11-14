@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FreshetFeeds;
 
 use FreshetFeeds\Admin\FeedsPage;
+use FreshetFeeds\Admin\OwnScreenNotices;
 use FreshetFeeds\Admin\SettingsSection;
 use FreshetFeeds\Blocks\FeedBlock;
 use FreshetFeeds\Cache\ImageStore;
@@ -59,6 +60,11 @@ final class Plugin
         $this->cron->hooks();
         (new FeedsPage($this->feeds, $this->providers, $this->cache, $this->runner))->hooks();
         (new SettingsSection())->hooks();
+        // On our own screens, and only there, another plugin's admin notices
+        // do not render (freshet-D337). Both of its hooks check is_admin()
+        // through the screen's own page var, so registering it here costs a
+        // front-end request nothing.
+        (new OwnScreenNotices(FeedsPage::SLUG, FRESHET_FEEDS_VERSION))->hooks();
 
         // Anything a build carries beyond the above boots from one class. A
         // build without it — the wordpress.org one, where the file is not
@@ -152,8 +158,10 @@ final class Plugin
             $items = $items->take($args['count']);
         }
 
-        $layout = $args['layout'] ?? '';
-        $layout = $layout !== '' ? $layout : $feed->defaultLayout;
+        // A layout is a template name (layout-{name}.php, here or in a theme),
+        // so only key characters: no dots, slashes or NULs reach the loader.
+        $layout = sanitize_key((string) ($args['layout'] ?? ''));
+        $layout = $layout !== '' ? $layout : sanitize_key($feed->defaultLayout);
 
         $template = $items->isEmpty() ? 'empty' : 'feed';
 

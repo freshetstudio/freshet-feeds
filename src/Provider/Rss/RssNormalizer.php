@@ -11,14 +11,13 @@ use FreshetFeeds\Item\ItemAuthor;
 use FreshetFeeds\Item\ItemImage;
 
 /**
- * RSS 2.0 / Atom → normalized Items. Pure (no WP, no network) so it's fully
+ * RSS 2.0 / Atom → normalized Items. Pure (no network; wp_json_encode is the one WP call) so it's fully
  * unit-testable; deliberately tolerant — real-world feeds are messy.
  */
 final class RssNormalizer
 {
     private const NS_MEDIA = 'http://search.yahoo.com/mrss/';
     private const NS_CONTENT = 'http://purl.org/rss/1.0/modules/content/';
-    private const NS_ATOM = 'http://www.w3.org/2005/Atom';
 
     /**
      * @return list<Item>
@@ -194,7 +193,7 @@ final class RssNormalizer
     /** @return array<string, mixed> */
     private function toArray(\SimpleXMLElement $entry): array
     {
-        $decoded = json_decode((string) json_encode($entry), true);
+        $decoded = json_decode((string) wp_json_encode($entry), true);
 
         return is_array($decoded) ? $decoded : [];
     }

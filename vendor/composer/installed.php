@@ -3,7 +3,7 @@
         'name' => 'freshet-feeds/freshet-feeds',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'c9024408deb5df272c216c7a5d5e4b74d08941bf',
+        'reference' => 'cd3982321164c64f3a29db879e49ac77ed7bcc6d',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'freshet-feeds/freshet-feeds' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'c9024408deb5df272c216c7a5d5e4b74d08941bf',
+            'reference' => 'cd3982321164c64f3a29db879e49ac77ed7bcc6d',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

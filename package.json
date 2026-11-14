@@ -1,6 +1,6 @@
 {
     "name": "freshet-feeds",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "private": true,
     "description": "Developer-first external feeds for WordPress.",
     "scripts": {

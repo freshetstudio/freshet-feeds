@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 ?>
 <div class="freshet-feeds__grid">
-    <?php foreach ($items as $item) : ?>
+    <?php foreach ($items as $item) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- template scope, not global. ?>
         <?php freshet_feeds_item($item, $feed); ?>
     <?php endforeach; ?>
 </div>

@@ -24,6 +24,8 @@ class ComposerStaticInit72298a93a7eb4086bc9847fe35a1b892
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'FreshetFeeds\\Admin\\FeedsPage' => __DIR__ . '/../..' . '/src/Admin/FeedsPage.php',
         'FreshetFeeds\\Admin\\MenuIcon' => __DIR__ . '/../..' . '/src/Admin/MenuIcon.php',
+        'FreshetFeeds\\Admin\\NoticeMessage' => __DIR__ . '/../..' . '/src/Admin/NoticeMessage.php',
+        'FreshetFeeds\\Admin\\OwnScreenNotices' => __DIR__ . '/../..' . '/src/Admin/OwnScreenNotices.php',
         'FreshetFeeds\\Admin\\SettingsSection' => __DIR__ . '/../..' . '/src/Admin/SettingsSection.php',
         'FreshetFeeds\\Blocks\\FeedBlock' => __DIR__ . '/../..' . '/src/Blocks/FeedBlock.php',
         'FreshetFeeds\\Cache\\ImageStore' => __DIR__ . '/../..' . '/src/Cache/ImageStore.php',

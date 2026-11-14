@@ -70,7 +70,7 @@ final class Cron
         if (!wp_next_scheduled(self::HOOK_REFRESH_ONE, [$feedId])) {
             wp_schedule_single_event(time(), self::HOOK_REFRESH_ONE, [$feedId]);
 
-            if (!defined('DOING_CRON') || !DOING_CRON) {
+            if (!wp_doing_cron()) {
                 spawn_cron();
             }
         }

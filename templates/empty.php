@@ -24,7 +24,7 @@ if (!current_user_can('manage_options')) {
     return;
 }
 
-$error = Plugin::instance()->itemCache()->lastError($feed);
+$error = Plugin::instance()->itemCache()->lastError($feed); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- template scope, not global.
 ?>
 <div class="freshet-feeds freshet-feeds--empty">
     <p>

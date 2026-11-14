@@ -4,7 +4,7 @@ Tags: feed, rss, youtube, bluesky, social-feed
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -108,6 +108,13 @@ Write to the address on [freshet.studio/support](https://freshet.studio/support?
 4. The edit screen for a feed: name, slug, provider, item count, and the field each provider needs, a feed URL for RSS / Atom, a channel ID for YouTube or a handle for Bluesky.
 
 == Changelog ==
+
+= 1.0.3 =
+* The Feeds screen carries the plugin's own mark in the admin menu instead of the generic RSS dashicon, painted in whichever admin colour scheme you use.
+* **Support** in the screen header now opens the support page, which says where to write and what to put in the mail, instead of opening a blank email.
+* Messages on the Feeds screen after a save or refresh now stay on your site instead of travelling in the address bar, so a link someone sends you can no longer put words of their choosing in a Feeds notice.
+* Feeds are fetched through WordPress's safe HTTP API, which refuses private-network and local addresses — also when a feed host redirects there. A feed on a local address now says so on the Feeds screen; developers can allow a host with the `http_request_host_is_external` filter.
+* Layout names are reduced to lowercase letters, numbers, dashes and underscores before a template is looked up, so name custom layouts that way (`layout-carousel.php`, `carousel`).
 
 = 1.0.2 =
 * New **Settings** tab on the Feeds screen with an opt-in to remove all plugin data (feeds, cached items and stored images) when the plugin is uninstalled.
